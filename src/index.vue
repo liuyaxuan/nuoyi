@@ -1,31 +1,11 @@
 <template>
   <div class="main-container">
     <el-container>
-      <!-- left -->
+      <!-- 菜单 -->
       <el-aside width="auto" style="background-color: darkgray;">
-        <el-menu
-          default-active="1"
-          class="el-menu-vertical-demo"
-          :collapse="isCollapse"
-          @open="handleOpen"
-          @close="handleClose"
-        >
-          <el-sub-menu index="1">
-            <template #title>
-              <span>main</span>
-            </template>
-            <el-menu-item index="1-1">one</el-menu-item>
-            <el-menu-item index="1-2">two</el-menu-item>
-          </el-sub-menu>
-          <!-- <router-link to="/index/home">
-            <el-menu-item index="1">Home</el-menu-item>
-          </router-link>
-          <router-link to="/404">
-            <el-menu-item index="2">About</el-menu-item>
-          </router-link> -->
-        </el-menu>
+        <my-menu></my-menu>
       </el-aside>
-      <!-- right -->
+      <!-- 主体 -->
       <el-container>
         <el-header>Header</el-header>
         <el-main>
@@ -36,7 +16,7 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script>
 import {
   reactive,
   ref,
@@ -44,52 +24,28 @@ import {
   onMounted,
   onBeforeUpdate,
   onUpdated,
-  getCurrentInstance, // 获取当前组件的实例
 } from 'vue';
+
+// 导入 myMenu 组件
+import myMenu from './components/menu/index.vue';
 
 export default {
   name: 'main-container',
+  components: {
+    myMenu
+  },
   setup() {
     const isCollapse = ref(false);
     const refRac = reactive({
-      menuList: []
+      
     });
-
-    // 展开
-    const handleOpen = (key, keyPath) => {
-      // console.log(key, keyPath)
-    }
-
-    // 收起
-    const handleClose = (key, keyPath) => {
-      // console.log(key, keyPath)
-    }
-
-    // 菜单
-    const createdMenu = () => {
-
-    }
-    // const jumpRouter = (name) => {
-    //   app.proxy.$router.push(
-    //     {
-    //       name: name,
-    //       query: {
-    //         id: 123
-    //       }
-    //     }
-    //   );
-    // }
 
     onBeforeMount(() => {
 
     });
 
     onMounted(() => {
-      const { appContext } = getCurrentInstance();
-      refRac.menuList = appContext.config.globalProperties.$router.options.routes || [];
-      refRac.menuList.forEach(el => {
-        console.log(el)
-      });
+
     });
 
     onBeforeUpdate(() => {
@@ -106,9 +62,6 @@ export default {
       refRac,
       isCollapse,
       // 函数
-      handleOpen,
-      handleClose,
-      // createdMenu
     };
   }
 }

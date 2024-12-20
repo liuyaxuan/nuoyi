@@ -1,7 +1,6 @@
 <template>
-    <div class="error-container">
-        <h1>{{ title }}</h1>
-        <p>{{ context }}</p>
+    <div class="map-container">
+        map
     </div>
 </template>
 
@@ -17,7 +16,7 @@ import {
 } from 'vue';
 
 export default {
-    name: 'error-container',
+    name: 'map-container',
     setup() {
         const app = getCurrentInstance(); // 获取当前组件的实例
         const title = ref('404');
@@ -25,11 +24,6 @@ export default {
         const refRac = reactive({
 
         });
-
-        const current = getCurrentInstance();
-        const getMsg = () => {
-
-        };
 
         onBeforeMount(() => {
 
@@ -49,24 +43,16 @@ export default {
 
 
         return {
-            title,
-            context,
-            refRac
+
         };
     }
 }
 </script>
 
 <style scoped>
-.error-container {
+.map-container {
     width: 100%;
     height: 100%;
     background-color: #f5f5f5;
-
-    /* h1 { } */
-}
-
-h1 {
-    margin: 0px;
 }
 </style>

@@ -1,4 +1,11 @@
-/* 
+/**
+*   布局
+*/
+.el-main {
+    padding: 0px !important;
+}
+
+/*
 *   菜单样式
 */
 .el-aside {
@@ -31,10 +38,12 @@
     color: #fff !important;
     background: #409EFF !important;
 }
+
 .el-sub-menu__title {
     color: #409EFF !important;
     font-weight: bold !important;
 }
+
 .el-submenu__title:focus,
 .el-submenu__title:hover {
     outline: 0 !important;

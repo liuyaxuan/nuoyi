@@ -9,7 +9,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
 // 引入路由
-import router, { __useRouter, __useRoute } from './touter/index.js'
+import router from './touter/index.js'
 
 // 当前实例
 const app = createApp(App);
@@ -18,9 +18,6 @@ const app = createApp(App);
 app.config.globalProperties.$http = {
     
 }
-
-app.config.globalProperties.$router = __useRouter();
-app.config.globalProperties.$route = __useRoute();
 
 app.use(router);
 app.use(ElementPlus);

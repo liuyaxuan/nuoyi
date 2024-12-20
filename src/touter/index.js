@@ -1,5 +1,5 @@
 // 通过vue-router插件实现模板路由配置
-import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { constantRoute } from './routes'
 
 // 创建路由器
@@ -34,12 +34,4 @@ export default router
 
 export function routerItems() {
     return constantRoute || []
-}
-
-export function __useRouter() {
-    return useRouter()
-}
-
-export function __useRoute() {
-    return useRoute()
 }
