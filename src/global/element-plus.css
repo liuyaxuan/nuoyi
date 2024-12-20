@@ -1,0 +1,43 @@
+/* 
+*   菜单样式
+*/
+.el-aside {
+    background-color: #313e6a !important;
+}
+
+.el-menu {
+    width: 100%;
+    height: 100%;
+    background-color: transparent !important;
+    border: 0px !important;
+}
+
+.el-menu-item {
+    color: aliceblue !important;
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+}
+
+.el-menu-item:hover {
+    outline: 0 !important;
+    color: #409EFF !important;
+}
+
+.el-menu-item.is-active {
+    font-weight: bold !important;
+    color: #fff !important;
+    background: #409EFF !important;
+}
+.el-sub-menu__title {
+    color: #409EFF !important;
+    font-weight: bold !important;
+}
+.el-submenu__title:focus,
+.el-submenu__title:hover {
+    outline: 0 !important;
+    color: #409EFF !important;
+    background: none !important;
+}
