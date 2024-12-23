@@ -22,6 +22,7 @@ export const constantRoute = [
             {
                 path: 'home',
                 name: 'home',
+                icon: 'house',
                 components: {
                     sidebar: home
                 },

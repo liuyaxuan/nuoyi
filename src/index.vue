@@ -7,7 +7,9 @@
       </el-aside>
       <!-- 主体 -->
       <el-container>
-        <el-header>Header</el-header>
+        <el-header>
+          <div style="width: 100%; height: 100%; background-color: #313e6a;"></div>
+        </el-header>
         <el-main>
           <router-view name="sidebar"></router-view>
         </el-main>

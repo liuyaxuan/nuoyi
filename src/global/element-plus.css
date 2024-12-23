@@ -50,3 +50,7 @@
     color: #409EFF !important;
     background: none !important;
 }
+
+.el-header {
+  padding: 0px 0px !important;  
+}

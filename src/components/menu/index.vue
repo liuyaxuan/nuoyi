@@ -13,6 +13,7 @@
                 :index="item.path"
             >
                     <template #title>
+                        <el-icon><house /></el-icon>
                         <span>{{ item.meta.title || '' }}</span>
                     </template>
                     <template
@@ -23,11 +24,15 @@
                             v-if="item.children && item.children.length > 0"
                             :index="childrenItem.path"
                         >
-                            <router-link :to="item.path + '/' + childrenItem.path">{{ childrenItem.meta.title || '' }}</router-link>
+                            <template #title>
+                                <el-icon><Menu /></el-icon>
+                                <router-link :to="item.path + '/' + childrenItem.path">{{ childrenItem.meta.title || '' }}</router-link>
+                            </template>
                         </el-menu-item>
                     </template>
             </el-sub-menu>
         </el-menu>
+        <el-button @click="isCollapse = !isCollapse">{{ isCollapse ? '展开' : '收起'}}</el-button>
     </div>
 </template>
 
