@@ -10,7 +10,7 @@ export const constantRoute = [
         path: '/',
         redirect: '/index',
         component: index,
-        name: 'Default',
+        name: 'default',
         hidden: true,
     },
     {

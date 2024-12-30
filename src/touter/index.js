@@ -17,8 +17,27 @@ let router = createRouter({
 })
 
 // 检查路由是否存在
-function isExist(routerToName, routerList) {
-    return true;
+function isExist(routerToName, list) {
+	let bool = false;
+	list.some(route => {
+		if(route.name === routerToName) {
+			bool = true
+		}
+	});
+	return bool
+}
+
+// 数组扁平化
+function flattenByProperty(arr, property) {
+  return arr.reduce((acc, item) => {
+    acc.push(item);
+    if (item[property] && Array.isArray(item[property])) {
+      acc = acc.concat(flattenByProperty(item[property], property));
+    } else if (item[property] && typeof item[property] === 'object') {
+      acc = acc.concat(flattenByProperty([item[property]], property));
+    }
+    return acc;
+  }, []);
 }
 
 // 路由首位
@@ -26,7 +45,9 @@ router.beforeEach((to, from, next) => {
     const routerList = routerItems(); // 获取路由列表
     const routerToName = to.name || ''; // 获取路由名称
     const routerFormName = from.name || ''; // 获取路由名称
-    next()
+	if (isExist(routerToName, flattenByProperty(routerList, 'children'))) {
+		next()
+	}
 })
 
 export default router

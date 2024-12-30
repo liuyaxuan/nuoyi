@@ -1,10 +1,11 @@
 <template>
     <div class="map-container">
-        map
+        测试页面
     </div>
 </template>
 
 <script>
+
 import {
     reactive,
     ref,
@@ -17,6 +18,8 @@ import {
 
 export default {
     name: 'map-container',
+    components: {
+    },
     setup() {
         const app = getCurrentInstance(); // 获取当前组件的实例
         const title = ref('404');

@@ -20,6 +20,7 @@
 }
 
 .el-menu-item {
+	height: 46px !important;
     color: aliceblue !important;
 }
 
@@ -40,6 +41,7 @@
 }
 
 .el-sub-menu__title {
+	height: 46px !important;
     color: #409EFF !important;
     font-weight: bold !important;
 }

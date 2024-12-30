@@ -4,8 +4,6 @@
             :default-active="defaultActive"
             class="el-menu-vertical-demo"
             :collapse="isCollapse"
-            @open="handleOpen"
-            @close="handleClose"
         >
             <el-sub-menu
                 v-for="(item) in refRac.menuData"
@@ -39,6 +37,7 @@
 <script>
 import {
     ref,
+	watch,
     reactive,
     onMounted,
     getCurrentInstance,
@@ -49,7 +48,7 @@ import { useRouter, useRoute } from 'vue-router'
 export default {
     name: "my-menu",
     props: [],
-    setup() {
+    setup(props,context) {
         // 获取当前组件的实例
         const app = getCurrentInstance();
         // 是否折叠
@@ -60,6 +59,11 @@ export default {
         const refRac = reactive({
             menuData: []
         })
+		
+		// 监听
+		watch(isCollapse, (newVal, oldVal) => {
+			context.emit('sentState', newVal);
+		})
 
         // 展开
         const handleOpen = (key, keyPath) => {
@@ -91,7 +95,7 @@ export default {
             } else {
                 defaultActive.value = refRac.menuData[0].path;
             }
-            console.log(defaultActive.value)
+
             app.proxy.$router.push(
                 {
                     name: defaultActive.value,
