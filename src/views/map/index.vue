@@ -1,61 +1,68 @@
 <template>
-    <div class="map-container">
-        测试页面
-    </div>
+	<div class="map-container">
+		<!-- leaflet map -->
+		<my-leaflet></my-leaflet>
+	</div>
 </template>
 
 <script>
+	import myLeaflet from './components/leaflet.vue';
+	import {
+		reactive,
+		ref,
+		onBeforeMount,
+		onMounted,
+		onBeforeUpdate,
+		onUpdated,
+		getCurrentInstance, // 获取当前组件的实例
+	} from 'vue';
 
-import {
-    reactive,
-    ref,
-    onBeforeMount,
-    onMounted,
-    onBeforeUpdate,
-    onUpdated,
-    getCurrentInstance, // 获取当前组件的实例
-} from 'vue';
+	export default {
+		name: 'map-container',
+		components: {
+			myLeaflet
+		},
+		setup() {
+			const app = getCurrentInstance(); // 获取当前组件的实例
 
-export default {
-    name: 'map-container',
-    components: {
-    },
-    setup() {
-        const app = getCurrentInstance(); // 获取当前组件的实例
-        const title = ref('404');
-        const context = ref('页面未找到');
-        const refRac = reactive({
+			onBeforeMount(() => {
 
-        });
+			});
 
-        onBeforeMount(() => {
+			onMounted(() => {
+				
+			});
 
-        });
+			onBeforeUpdate(() => {
 
-        onMounted(() => {
-            
-        });
+			});
 
-        onBeforeUpdate(() => {
+			onUpdated(() => {
 
-        });
-
-        onUpdated(() => {
-
-        });
+			});
 
 
-        return {
-
-        };
-    }
-}
+			return {
+				// 函数
+			};
+		}
+	}
 </script>
 
 <style scoped>
-.map-container {
-    width: 100%;
-    height: 100%;
-    background-color: #f5f5f5;
-}
+	.map-container {
+		width: 100%;
+		height: 100%;
+		background-color: #f5f5f5;
+
+		#map {
+			width: 100%;
+			height: 100%;
+		}
+		.top {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+	}
 </style>

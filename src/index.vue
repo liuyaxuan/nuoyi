@@ -5,7 +5,10 @@
 			<el-aside width="auto" class="">
 				<div class="head-title">
 					<el-icon><Van /></el-icon>
-					<span v-if="!isCollapse">MENU</span>
+					<span
+						class="header-title-text"
+						v-if="!isCollapse"
+					>MENU</span>
 				</div>
 				<my-menu
 					@sentState="getChildrenState"
@@ -100,8 +103,8 @@
 			justify-content: center;
 			align-items: center;
 			
-			.el-icon {
-				margin-right: 10px;
+			.header-title-text {
+				margin-left: 10px;
 			}
 		}
 		
