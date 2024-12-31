@@ -22,7 +22,7 @@
 		components: {},
 		setup() {
 			const app = getCurrentInstance(); // 获取当前组件的实例
-			// const map = ref(null);
+			const map_cover = ref([]);
 			const refRac = reactive({
 				map: {},
 			});
@@ -34,8 +34,15 @@
 				}).setView([30.662325, 104.065716], 9);
 				// 移除默认的放大缩小按钮
 				refRac.map.removeControl(refRac.map.zoomControl);
-				// 鼠标点击地图拾取经纬度
 				refRac.map.removeControl(refRac.map.attributionControl);
+				// 监听地图缩放事件
+				refRac.map.on('zoomend', function() {
+					handleMapZoomend();
+				})
+				refRac.map.on('dragend', function() {
+					handleMapZoomend();
+				})
+				
 				// 设置地图类型
 				setMapType('osm')
 			}
@@ -59,9 +66,35 @@
 				}).addTo(refRac.map);
 			}
 			
+			// function: 在地图可视区域上增加深色遮罩
+			function handleMapZoomend() {
+				clearMap(map_cover.value);
+				// 获取当前地图的边界
+				const bounds = refRac.map.getBounds();
+				// 获取四个角的经纬度
+				const northWest = bounds.getNorthWest(); // 左上角
+				const northEast = bounds.getNorthEast(); // 右上角
+				const southWest = bounds.getSouthWest(); // 左下角
+				const southEast = bounds.getSouthEast(); // 右下角
+				// 创建半透明矩形图层
+				const rectangle = L.rectangle([
+					[northWest.lat, northWest.lng],
+					[southEast.lat, southEast.lng]
+				], {
+					color: 'transparent', // 边框颜色
+					weight: 0, // 边框宽度
+					fillColor: 'black', // 填充颜色
+					fillOpacity: 0.1 // 填充透明度
+				}).addTo(refRac.map);
+				map_cover.value.push(rectangle)
+			}
+			
 			// 清除地图覆盖物
-			const clearMap = () => {
-				
+			// data参数：当前需要清理的覆盖物图层，数据类型只能是Array
+			const clearMap = (data) => {
+				for (let i = 0; i < data.length; i++) {
+					refRac.map.removeLayer(data[i]);
+				}
 			}
 
 			function handleAmap() {
@@ -93,7 +126,9 @@
 				// 函数
 				init,
 				handleAmap,
-				handleOSM
+				handleOSM,
+				handleMapZoomend,
+				clearMap
 			};
 		}
 	}
