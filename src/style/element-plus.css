@@ -3,6 +3,7 @@
 */
 .el-main {
     padding: 0px !important;
+	overflow-x: hidden !important;
 }
 
 /*

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-	import myLeaflet from './components/leaflet.vue';
+	import myLeaflet from './components/leaflet/leaflet.vue';
 	import {
 		reactive,
 		ref,
@@ -49,7 +49,7 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="less">
 	.map-container {
 		width: 100%;
 		height: 100%;

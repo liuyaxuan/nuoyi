@@ -23,8 +23,10 @@
                             :index="childrenItem.path"
                         >
                             <template #title>
-                                <el-icon><Menu /></el-icon>
-                                <router-link :to="item.path + '/' + childrenItem.path">{{ childrenItem.meta.title || '' }}</router-link>
+                                <router-link :to="item.path + '/' + childrenItem.path">
+									<el-icon><Menu /></el-icon>
+									{{ childrenItem.meta.title || '' }}
+								</router-link>
                             </template>
                         </el-menu-item>
                     </template>

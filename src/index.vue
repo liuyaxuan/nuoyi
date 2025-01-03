@@ -111,6 +111,10 @@
 		.el-aside {
 			background-color: darkgray;
 		}
+	
+		.el-container {
+			min-width: 500px;
+		}
 		
 		.menu-container {
 			height: calc(100% - 60px);
