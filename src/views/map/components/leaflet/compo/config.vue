@@ -24,10 +24,15 @@
 	const handleOpen = (id) => {
 		let drawer = document.getElementsByClassName('drawer');
 		let dom = document.getElementById(id);
-		if (dom.style.right == '10px') {
+		if (dom.style.right == '30px') {
 			dom.style.right = '-300px';
 		} else {
-			dom.style.right = '10px';
+			dom.style.right = '30px';
+			for (let i = 0; i < drawer.length; i++) {
+				if (drawer[i].id !== id) {
+					drawer[i].style.right = '-300px';
+				}
+			}
 		}
 	}
 	
@@ -57,7 +62,7 @@
 			left: -30px;
 		    width: 30px;
 		    height: 50px;
-		    background: rgba(255, 255, 255, 0.8);
+		    background: rgba(255, 255, 255, 1);
 			border-radius: 6px 6px;
 			cursor: pointer;
 			.trapezoid-inner {
