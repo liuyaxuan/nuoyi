@@ -1,10 +1,15 @@
 <template>
 	<div class="map-container-leaflet">
+		<!-- leaflet map container -->
 		<div id="map"></div>
 		<!-- 接收输入数据多行文本框 -->
-		<my-textarea></my-textarea>
+		<my-textarea
+			:handleMapData="handleMapData"
+		></my-textarea>
 		<!-- 地图功能选项菜单 -->
-		<my-mapmenu></my-mapmenu>
+		<my-maphistory
+			:map="state.map"
+		></my-maphistory>
 		<!-- 地图配置项 -->
 		<my-config></my-config>
 	</div>
@@ -28,10 +33,10 @@
 	import 'leaflet/dist/leaflet.css';
 	// 页面组件
 	import myTextarea from './compo/textarea.vue'
-	import myMapmenu from './compo/menu.vue'
+	import myMaphistory from './compo/history.vue'
 	import myConfig from './compo/config.vue'
 	// 组合式函数
-	import { userMarker } from './fns/marker.js'
+	import { useMarker } from './fns/marker.js'
 
 	defineOptions({
 		name: 'mapLeaflet'
@@ -44,31 +49,33 @@
 	defineComponent({
 		components: {
 			myTextarea,
-			myMapmenu,
+			myMaphistory,
 			myConfig
 		}
 	})
 	
 	// 声明状态
 	const app = getCurrentInstance(); // 获取当前组件的实例
-	const map_cover = ref([]);
-	const refRac = reactive({
-		map: {},
+	const map_cover = ref([]); // 地图深色遮罩
+	const mapLayer = ref([]); // 绘制到地图的各layer层
+	const state = reactive({
+		map: {}, // 地图实例
+		data: [], // 输入数据
 	});
 
-	function init() {
+	const init = () => {
 		// 初始化地图实例
-		refRac.map = L.map('map', {
+		state.map = L.map('map', {
 			preferCanvas: false
 		}).setView([30.662325, 104.065716], 9);
 		// 移除默认的放大缩小按钮
-		refRac.map.removeControl(refRac.map.zoomControl);
-		refRac.map.removeControl(refRac.map.attributionControl);
+		state.map.removeControl(state.map.zoomControl);
+		state.map.removeControl(state.map.attributionControl);
 		// 监听地图缩放事件
-		refRac.map.on('zoomend', function() {
+		state.map.on('zoomend', function() {
 			handleMapZoomend();
 		})
-		refRac.map.on('dragend', function() {
+		state.map.on('dragend', function() {
 			handleMapZoomend();
 		})
 		
@@ -78,7 +85,7 @@
 		handleMapZoomend();
 	}
 
-	function setMapType(type) {
+	const setMapType = (type) => {
 		if (!type) type = 'osm'
 		// 高德底图
 		if (type === 'amap') {
@@ -86,7 +93,7 @@
 				'https://wprd03.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&style=7&ltype=11', {
 					maxZoom: 18,
 					attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-				}).addTo(refRac.map);
+				}).addTo(state.map);
 			return
 		}
 
@@ -94,14 +101,14 @@
 		const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 19,
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-		}).addTo(refRac.map);
+		}).addTo(state.map);
 	}
 	
 	// function: 在地图可视区域上增加深色遮罩
-	function handleMapZoomend() {
+	const handleMapZoomend = () => {
 		clearMap(map_cover.value);
 		// 获取当前地图的边界
-		const bounds = refRac.map.getBounds();
+		const bounds = state.map.getBounds();
 		// 获取四个角的经纬度
 		const northWest = bounds.getNorthWest(); // 左上角
 		const northEast = bounds.getNorthEast(); // 右上角
@@ -116,7 +123,7 @@
 			weight: 0, // 边框宽度
 			fillColor: 'rgb(49, 62, 106)', // 填充颜色
 			fillOpacity: 0.1 // 填充透明度
-		}).addTo(refRac.map);
+		}).addTo(state.map);
 		map_cover.value.push(rectangle)
 	}
 	
@@ -124,16 +131,27 @@
 	// data参数：当前需要清理的覆盖物图层，数据类型只能是Array
 	const clearMap = (data) => {
 		for (let i = 0; i < data.length; i++) {
-			refRac.map.removeLayer(data[i]);
+			state.map.removeLayer(data[i]);
 		}
 	}
 
-	function handleAmap() {
+	const handleAmap = () => {
 		setMapType('amap')
 	}
 
-	function handleOSM() {
+	const handleOSM = () => {
 		setMapType('osm')
+	}
+	
+	/**
+	 * 地图layer绘制，接收输入数据
+	 * @param {Array, Object} data 输入数据
+	 */
+	const handleMapData = (data) => {
+		// 接收输入
+		state.data = data || [];
+		// 增加layer绘制类型判断
+		useMarker(state.map, state.data);
 	}
 
 	onBeforeMount(() => {
