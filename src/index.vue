@@ -1,5 +1,8 @@
 <template>
 	<div class="main-container">
+		<!-- loading -->
+		<my-loading></my-loading>
+		<!-- main -->
 		<el-container>
 			<!-- 菜单 -->
 			<el-aside width="auto" class="">
@@ -38,13 +41,16 @@
 		onUpdated,
 	} from 'vue';
 
+	// 导入loading组件(全局)
+	import myLoading from './views/loader/loading.vue';
 	// 导入 myMenu 组件
 	import myMenu from './components/menu/index.vue';
 
 	export default {
 		name: 'main-container',
 		components: {
-			myMenu
+			myMenu,
+			myLoading,
 		},
 		setup() {
 			let isCollapse = ref(false);

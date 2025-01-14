@@ -22,11 +22,14 @@
     "vue": "^3.2.13",
     "vue-json-editor": "^1.4.3",
     "vue-router": "^4.5.0",
+    "vuex": "^4.0.2",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@babel/preset-env": "^7.26.0",
+    "@vue/babel-plugin-jsx": "^1.2.5",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",

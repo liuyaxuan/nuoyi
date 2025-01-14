@@ -10,7 +10,7 @@
                 :key="item.path"
                 :index="item.path"
             >
-                    <template #title>
+                    <template #title v-if="!item.hidden">
                         <el-icon><house /></el-icon>
                         <span>{{ item.meta.title || '' }}</span>
                     </template>
@@ -19,7 +19,7 @@
                         :key="childrenItem.path"
                     >
                         <el-menu-item
-                            v-if="item.children && item.children.length > 0"
+                            v-if="item.children && item.children.length > 0 && !childrenItem.hidden"
                             :index="childrenItem.path"
                         >
                             <template #title>
@@ -93,7 +93,7 @@ export default {
         // 默认选中菜单
         const handleDefaultActive = () => {
             if (refRac.menuData[0] && refRac.menuData[0].children.length > 0) {
-                defaultActive.value = refRac.menuData[0].children[0].path;
+                defaultActive.value = refRac.menuData[0].children[1].path;
             } else {
                 defaultActive.value = refRac.menuData[0].path;
             }

@@ -37,6 +37,8 @@
 		onMounted,
 		getCurrentInstance,
 		watch,
+		render,
+		defineComponent,
 	} from 'vue';
 	
 	// 当前实例

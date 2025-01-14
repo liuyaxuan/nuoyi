@@ -10,10 +10,11 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 // message
 import { ElMessage } from 'element-plus'
-
-
 // 引入路由
 import router from './touter/index.js'
+
+// vuex
+import store from './store'
 
 // 当前实例
 const app = createApp(App);
@@ -24,8 +25,11 @@ app.config.globalProperties.$http = {
 }
 // 将ElMessage挂载到Vue实例上
 app.config.globalProperties.$message = ElMessage
-
+// 路由
 app.use(router);
+// 挂载vuex store
+app.use(store);
+// element-plus全局注册
 app.use(ElementPlus);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
