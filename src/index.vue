@@ -22,7 +22,9 @@
 				<el-header>
 					<div style="width: 100%; height: 100%; background-color: #313e6a;"></div>
 				</el-header>
-				<el-main>
+				<el-main class="el-main-container">
+					<!-- breadcrumb -->
+					<my-breadcrumb></my-breadcrumb>
 					<router-view name="sidebar"></router-view>
 				</el-main>
 			</el-container>
@@ -42,7 +44,9 @@
 	} from 'vue';
 
 	// 导入loading组件(全局)
-	import myLoading from './views/loader/loading.vue';
+	import myLoading from './components/loader/loading.vue';
+	// 面包屑导航
+	import myBreadcrumb from './components/breadcrumb/index.vue';
 	// 导入 myMenu 组件
 	import myMenu from './components/menu/index.vue';
 
@@ -51,6 +55,7 @@
 		components: {
 			myMenu,
 			myLoading,
+			myBreadcrumb
 		},
 		setup() {
 			let isCollapse = ref(false);
@@ -94,7 +99,7 @@
 	.main-container {
 		width: 100%;
 		height: 100%;
-		background-color: #f5f5f5;
+		background-color: #e7e7e7;
 		display: flex;
 		flex-direction: column;
 		
@@ -124,6 +129,10 @@
 		
 		.menu-container {
 			height: calc(100% - 60px);
+		}
+		.el-main-container {
+			display: flex;
+			flex-direction: column;
 		}
 	}
 </style>

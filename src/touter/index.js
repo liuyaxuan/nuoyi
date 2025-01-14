@@ -40,12 +40,13 @@ function flattenByProperty(arr, property) {
   }, []);
 }
 
-// 路由首位
+// 路由守卫
 router.beforeEach((to, from, next) => {
     const routerList = routerItems(); // 获取路由列表
     const routerToName = to.name || ''; // 获取路由名称
     const routerFormName = from.name || ''; // 获取路由名称
 	if (isExist(routerToName, flattenByProperty(routerList, 'children'))) {
+		if (routerToName == 'index') return next('/index/home')
 		next()
 	}
 })

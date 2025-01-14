@@ -40,17 +40,21 @@
 import {
     ref,
 	watch,
+	computed,
     reactive,
     onMounted,
     getCurrentInstance,
 } from 'vue';
-
+import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 
 export default {
     name: "my-menu",
     props: [],
     setup(props,context) {
+		const store = useStore();
+		const $router = useRouter(); // 获取路由实例
+		const $route = useRoute(); // 获取当前路由信息
         // 获取当前组件的实例
         const app = getCurrentInstance();
         // 是否折叠
@@ -66,6 +70,13 @@ export default {
 		watch(isCollapse, (newVal, oldVal) => {
 			context.emit('sentState', newVal);
 		})
+		watch(() => $route, (newVal, oldVal) => {
+			const { fullPath } = newVal;
+			setTimeout(() => {
+				defaultActive.value = $route.name;
+				console.log('==>', $route.name)
+			}, 0)
+		}, { immediate: true, deep: true })
 
         // 展开
         const handleOpen = (key, keyPath) => {
@@ -80,7 +91,6 @@ export default {
         // 获取生成菜单树结构
         const createdMenuTree = () => {
             const { appContext } = getCurrentInstance();
-            const $router = useRouter();
             const defaultMenu = $router.options.routes || [];
             defaultMenu.forEach(item => {
                 if (!item.hidden) {
@@ -93,12 +103,12 @@ export default {
         // 默认选中菜单
         const handleDefaultActive = () => {
             if (refRac.menuData[0] && refRac.menuData[0].children.length > 0) {
-                defaultActive.value = refRac.menuData[0].children[1].path;
+                defaultActive.value = refRac.menuData[0].children[0].path;
             } else {
                 defaultActive.value = refRac.menuData[0].path;
             }
 
-            app.proxy.$router.push(
+            $router.push(
                 {
                     name: defaultActive.value,
                     query: {}
