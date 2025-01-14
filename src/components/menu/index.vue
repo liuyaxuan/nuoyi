@@ -32,7 +32,13 @@
                     </template>
             </el-sub-menu>
         </el-menu>
-        <el-button @click="isCollapse = !isCollapse">{{ isCollapse ? '展开' : '收起'}}</el-button>
+		<div class="collapse-btn" @click="isCollapse = !isCollapse">
+			<el-icon>
+				<Expand v-if="isCollapse" />
+				<Fold v-else />
+			</el-icon>
+		</div>
+		
     </div>
 </template>
 
@@ -74,7 +80,6 @@ export default {
 			const { fullPath } = newVal;
 			setTimeout(() => {
 				defaultActive.value = $route.name;
-				console.log('==>', $route.name)
 			}, 0)
 		}, { immediate: true, deep: true })
 
@@ -147,5 +152,16 @@ export default {
         display: block;
         text-align: left;
     }
+	
+	.collapse-btn {
+		width: 100%;
+		height: 40px;
+		line-height: 40px;
+		text-align: center;
+		cursor: pointer;
+		background-color: #3f9eff;
+		color: #fff;
+		font-size: 16px;
+	}
 }
 </style>

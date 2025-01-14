@@ -1,4 +1,20 @@
 /**
+ * @description 防抖
+ */
+export function debounce(func, wait) {
+	let timeout;
+	return function () {
+		let context = this;
+		let args = arguments;
+		if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			func.apply(context, args);
+		}, wait);
+	};
+}
+
+
+/**
  * @param {*} obj
  * @description 行政区域边界
  * 传入参数数据格式，参考：https://datav.aliyun.com/portal/school/atlas/area_selector，选择到市级，包含内部行政区划分

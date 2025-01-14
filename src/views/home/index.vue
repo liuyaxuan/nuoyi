@@ -1,6 +1,6 @@
 <template>
     <div class="home-container">
-        <h1>HOME</h1>
+		<my-search></my-search>
     </div>
 </template>
 
@@ -14,9 +14,14 @@ import {
     onUpdated,
     getCurrentInstance, // 获取当前组件的实例
 } from 'vue';
+// 组件
+import mySearch from '@/components/search'
 
 export default {
     name: 'home-container',
+	components: {
+		mySearch
+	},
     setup() {
         const app = getCurrentInstance(); // 获取当前组件的实例
         const refRac = reactive({
@@ -49,5 +54,10 @@ export default {
 </script>
 
 <style scoped>
+	.home-container {
+		width: 100%;
+		height: 100%;
+		background: #f5f5f5;
+	}
 
 </style>

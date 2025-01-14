@@ -44,11 +44,11 @@
 	} from 'vue';
 
 	// 导入loading组件(全局)
-	import myLoading from './components/loader/loading.vue';
+	import myLoading from '@/components/loader/loading.vue';
 	// 面包屑导航
-	import myBreadcrumb from './components/breadcrumb/index.vue';
+	import myBreadcrumb from '@/components/breadcrumb/index.vue';
 	// 导入 myMenu 组件
-	import myMenu from './components/menu/index.vue';
+	import myMenu from '@/components/menu/index.vue';
 
 	export default {
 		name: 'main-container',
