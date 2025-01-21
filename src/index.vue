@@ -7,11 +7,12 @@
 			<!-- 菜单 -->
 			<el-aside width="auto" class="">
 				<div class="head-title">
-					<el-icon><Van /></el-icon>
+					<!-- <el-icon><Van /></el-icon> -->
+					<img :src="elephant" class="header-title-icon" />
 					<span
 						class="header-title-text"
 						v-if="!isCollapse"
-					>MENU</span>
+					>{{ '<自定义 />' }}</span>
 				</div>
 				<my-menu
 					@sentState="getChildrenState"
@@ -43,6 +44,7 @@
 		onUpdated,
 	} from 'vue';
 
+	import elephant from "@/assets/icons/blue/elephant.svg";
 	// 导入loading组件(全局)
 	import myLoading from '@/components/loader/loading.vue';
 	// 面包屑导航
@@ -85,6 +87,7 @@
 
 
 			return {
+				elephant,
 				// 属性
 				refRac,
 				isCollapse,
@@ -114,6 +117,10 @@
 			justify-content: center;
 			align-items: center;
 			
+			.header-title-icon {
+				fill: white !important;
+			}
+
 			.header-title-text {
 				margin-left: 10px;
 			}

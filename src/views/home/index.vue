@@ -1,6 +1,8 @@
 <template>
     <div class="home-container">
-		<my-search></my-search>
+		<ny-search
+            @handleSearch="handleSearch"
+        ></ny-search>
     </div>
 </template>
 
@@ -15,18 +17,22 @@ import {
     getCurrentInstance, // 获取当前组件的实例
 } from 'vue';
 // 组件
-import mySearch from '@/components/search'
+import nySearch from '@/components/search'
 
 export default {
     name: 'home-container',
 	components: {
-		mySearch
+		nySearch
 	},
     setup() {
         const app = getCurrentInstance(); // 获取当前组件的实例
         const refRac = reactive({
 
         });
+
+        const handleSearch = (val) => {
+            console.log(val);
+        }
 
 
         onBeforeMount(() => {
@@ -47,7 +53,7 @@ export default {
 
 
         return {
-
+            handleSearch
         };
     }
 }
