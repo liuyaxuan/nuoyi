@@ -21,7 +21,10 @@
 			<!-- 主体 -->
 			<el-container>
 				<el-header>
-					<div style="width: 100%; height: 100%; background-color: #313e6a;"></div>
+					<div class="el-header-container">
+						<img :src="peopleSafeOne" class="people-icon" />
+						<img :src="moreOne" class="set-icon" />
+					</div>
 				</el-header>
 				<el-main class="el-main-container">
 					<!-- breadcrumb -->
@@ -44,6 +47,9 @@
 		onUpdated,
 	} from 'vue';
 
+	// icon 资源
+	import peopleSafeOne from '@/assets/icons/blue/1_people-safe-one.svg';
+	import moreOne from '@/assets/icons/blue/1_more-one.svg';
 	import elephant from "@/assets/icons/blue/elephant.svg";
 	// 导入loading组件(全局)
 	import myLoading from '@/components/loader/loading.vue';
@@ -88,6 +94,8 @@
 
 			return {
 				elephant,
+				moreOne,
+				peopleSafeOne,
 				// 属性
 				refRac,
 				isCollapse,
@@ -128,6 +136,31 @@
 		
 		.el-aside {
 			background-color: darkgray;
+		}
+
+		.el-header {
+			.el-header-container {
+				width: 100%;
+				height: 100%;
+				background-color: #313e6a;
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+				padding-right: 30px;
+				box-sizing: border-box;
+				.people-icon {
+					margin-right: 10px;
+				}
+				.people-icon, .set-icon {
+					width: 25px;
+					height: 25px;
+					filter: grayscale(100%);
+				}
+				.people-icon:hover, .set-icon:hover {
+					cursor: pointer;
+					filter: grayscale(0%);
+				}
+			}
 		}
 	
 		.el-container {

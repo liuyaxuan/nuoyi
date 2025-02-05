@@ -7,6 +7,7 @@
 		size: 组件大小，可选值：small、medium、large
         disabled: 按钮是否禁用，可选值：true、false
         loading: 按钮是否加载中，可选值：true、false
+		handleSearch: 搜索事件 type: Function
 	author: Liu.Y.X
 	date: 2025-01-21
 
@@ -22,9 +23,10 @@
         <button
             class="ny-button"
             type="primary"
-            :disabled="true"
+            :disabled="false"
+            @click="handleClick"
         >
-            <span>搜索</span>
+            搜索
         </button>
     </div>
 </template>
@@ -38,12 +40,14 @@ import {
     getCurrentInstance, // 获取当前组件的实例
     defineOptions,
     defineProps,
+    defineEmits,
 } from 'vue';
 import loadingICON from '@/assets/icons/white/loading.svg';
 
 defineOptions({
     name: 'ny-button'
 })
+const emit = defineEmits(['click']);
 
 defineProps({
     // 按钮类型
@@ -69,6 +73,10 @@ defineProps({
 })
 
 const app = getCurrentInstance(); // 获取当前组件的实例
+
+const handleClick = () => {
+    emit('click');
+}
 
 onBeforeMount(() => {
 

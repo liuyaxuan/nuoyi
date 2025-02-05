@@ -15,8 +15,13 @@
 			<ny-input
 				v-model="searchText"
 				placeholder="输入内容点击「搜索」..."
-			/>
-			<ny-button class="ny-search-btn" type="primary" @click="handleSearch">搜索</ny-button>
+			>
+			</ny-input>
+			<ny-button
+				class="ny-search-btn"
+				type="primary"
+				@click="handleSearch"
+			>搜索</ny-button>
 		</div>
 	</div>
 </template>
