@@ -3,7 +3,13 @@
 		<ny-search
             @handleSearch="handleSearch"
         ></ny-search>
+
         <div class="home-content">
+            <ny-divider type="frame">
+                <template v-slot:icon>
+                    <img :src="billICON" class="divider-icon" />
+                </template>
+            </ny-divider>
             <div class="row-measure">
                 <ny-card
                     id="card1"
@@ -48,6 +54,8 @@ import {
 import nySearch from '@/components/search'
 import nyDivider from '@/components/divider'
 import nyCard from '@/components/card'
+// icon 资源
+import billICON from '@/assets/icons/blue/bill.svg';
 
 export default {
     name: 'home-container',
@@ -85,6 +93,7 @@ export default {
 
 
         return {
+            billICON,
             handleSearch
         };
     }
@@ -113,6 +122,11 @@ export default {
                 flex-wrap: wrap;
                 justify-content: flex-start;
                 align-items: center;
+            }
+
+            .divider-icon {
+                width: 15px;
+                height: auto;
             }
             
         }
