@@ -32,6 +32,7 @@
 		<!-- 弹窗 -->
 		<ny-dialog
 			:show="isVisible"
+			width="700"
 			@close="isVisible = false"
 		>
 			<div>自定义插槽内容</div>

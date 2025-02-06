@@ -4,6 +4,7 @@
 	description: Dialog对话框
 	attributes:
         - show: 是否显示对话框
+        - width: 对话框宽度
         - title: 标题
         - context: 内容
 		- close: 关闭事件 type: Function
@@ -17,7 +18,7 @@
 <template>
     <div class="ny-dialog" v-if="show">
         <div class="cover"></div>
-        <div class="dialog-fly-in">
+        <div class="dialog-fly-in" :style="{ 'width': width + 'px' }">
             <div class="ny-dialog-header">
                 <span class="ny-dialog-title" >{{ title }}</span>
                 <span class="ny-dialog-close" @click="handleClose">X</span>
@@ -50,6 +51,10 @@ defineProps({
     show: {
         type: Boolean,
         default: false
+    },
+    width: {
+        type: Number,
+        default: 700
     },
     title: {
         type: String,
@@ -99,7 +104,7 @@ onUpdated(() => {
 
 .dialog-fly-in {
     width: 0px;
-    height: 0px;
+    height: auto;
     position: absolute;
     top: 0%;
     right: 0%;
@@ -150,8 +155,6 @@ onUpdated(() => {
     }
 
     100% {
-        width: 700px;
-        height: auto;
         top: 30%;
         right: 50%;
         transform: translate(50%, 50%);
