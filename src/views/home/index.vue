@@ -7,21 +7,18 @@
             <div class="row-measure">
                 <ny-card
                     id="card1"
-                    class="mr-10"
                     title="卡片标题1"
                     context="123123"
                     bgColor="#494949"
                 ></ny-card>
                 <ny-card
                     id="card2"
-                    class="mr-10"
                     title="卡片标题2"
                     context="456456"
                     bgColor="#313e6a"
                 ></ny-card>
                 <ny-card
                     id="card3"
-                    class="mr-10"
                     title="卡片标题3"
                     context="789789"
                     bgColor="#494949"
@@ -113,6 +110,7 @@ export default {
                 width: 100%;
                 height: auto;
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: flex-start;
                 align-items: center;
             }

@@ -6,6 +6,10 @@
         - title: 标题
         - context: 内容
         - bgColor: 背景颜色
+        - titleColor: 标题颜色
+        - contextColor: 内容颜色
+  slot:
+    - 默认插槽：用于放置内容
 	author: Liu.Y.X
 	date: 2025-01-21
 
@@ -15,8 +19,21 @@
     <div :id="id" class="ny-card">
         <div class="notiglow"></div>
         <div class="notiborderglow"></div>
-        <div class="notititle">{{ title }}</div>
-        <div class="notibody">{{ context }}</div>
+        <div
+          class="notititle"
+          :style="{
+            'color': titleColor
+          }"
+        >{{ title }}</div>
+        <div
+          class="notibody"
+          :style="{
+            'color': contextColor
+          }"
+        >{{ context }}</div>
+        <div style="z-index: 5;">
+          <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -56,6 +73,14 @@ defineProps({
     bgColor: {
         type: String,
         default: '#222222'
+    },
+    titleColor: {
+        type: String,
+        default: '#32a6ff'
+    },
+    contextColor: {
+        type: String,
+        default: '#ffffff'
     }
 })
 
@@ -99,10 +124,10 @@ onUpdated(() => {
   flex-direction: column;
   isolation: isolate;
   position: relative;
-  width: 100%;
-  min-width: 200px;
-  max-width: 350px;
-  height: 8rem;
+  width: 275px;
+  min-height: 8rem;
+  margin-right: 10px;
+  margin-bottom: 10px;
   background: #7e61ff;
   border-radius: 1rem;
   overflow: hidden;
@@ -140,7 +165,7 @@ onUpdated(() => {
 .notititle {
   color: var(--color);
   padding: 0.65rem 0.25rem 0.4rem 1.25rem;
-  font-weight: 500;
+  font-weight: 900;
   font-size: 1.1rem;
   transition: transform 300ms ease;
   z-index: 5;
@@ -153,6 +178,7 @@ onUpdated(() => {
 .notibody {
   color: #fff;
   padding: 0 1.25rem;
+  font-weight: 500;
   transition: transform 300ms ease;
   z-index: 5;
 }
