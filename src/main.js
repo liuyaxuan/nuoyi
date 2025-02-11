@@ -11,7 +11,7 @@ import 'element-plus/dist/index.css'
 // message
 import { ElMessage } from 'element-plus'
 // 引入路由
-import router from './touter/index.js'
+import router from './router/index.js'
 
 // vuex
 import store from './store'

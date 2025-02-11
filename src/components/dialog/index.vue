@@ -100,6 +100,7 @@ onUpdated(() => {
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
 }
 
 .dialog-fly-in {
@@ -108,6 +109,7 @@ onUpdated(() => {
     position: absolute;
     top: 0%;
     right: 0%;
+    z-index: 999;
     border-radius: 6px;
     box-shadow: 0px 2px 2px #464646;
     border: 1px solid #ebebeb;

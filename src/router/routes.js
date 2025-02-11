@@ -1,5 +1,6 @@
 // 载入页面
 import index from '@/index.vue'
+import login from '@/views/login/index.vue'
 import home from '@/views/home/index.vue'
 import map from '@/views/map/index.vue'
 import __404 from '@/views/404.vue'
@@ -19,6 +20,21 @@ export const constantRoute = [
         component: index,
         name: 'default',
         hidden: true,
+    },
+    // {
+    //     path: '/login',
+    //     component: login,
+    //     name: 'login',
+    //     meta: { title: '登录', icon: 'default' },
+    //     hidden: false,
+    // },
+    {
+        path: '/login',
+        component: login,
+        name: 'login',
+        meta: { title: '登录', icon: 'default' },
+		hidden: true,
+        children: []
     },
     {
         path: '/index',

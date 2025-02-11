@@ -20,6 +20,7 @@
 					<div class="el-header-container">
 						<img :src="peopleSafeOne" class="people-icon" @click="handlePeople" />
 						<img :src="moreOne" class="set-icon" @click="handleMore" />
+						<img :src="outbound" class="out-icon" @click="handleOut" />
 					</div>
 				</el-header>
 				<el-main class="el-main-container">
@@ -32,7 +33,7 @@
 		<!-- 弹窗 -->
 		<ny-dialog
 			:show="isVisible"
-			width="700"
+			:width="700"
 			@close="isVisible = false"
 		>
 			<div>自定义插槽内容</div>
@@ -55,6 +56,7 @@ import {
 import peopleSafeOne from '@/assets/icons/blue/1_people-safe-one.svg';
 import moreOne from '@/assets/icons/blue/1_more-one.svg';
 import elephant from "@/assets/icons/blue/elephant.svg";
+import outbound from "@/assets/icons/blue/outbound.svg";
 // 导入loading组件(全局)
 import myLoading from '@/components/loader/loading.vue';
 // 面包屑导航
@@ -89,6 +91,9 @@ export default {
 		function handleMore() {
 			isVisible.value = true;
 		}
+		function handleOut() {
+			isVisible.value = true;
+		}
 
 		onBeforeMount(() => {
 
@@ -111,6 +116,7 @@ export default {
 			elephant,
 			moreOne,
 			peopleSafeOne,
+			outbound,
 			// 属性
 			refRac,
 			isVisible,
@@ -172,14 +178,16 @@ export default {
 			}
 
 			.people-icon,
-			.set-icon {
+			.set-icon,
+			.out-icon {
 				width: 25px;
 				height: 25px;
 				filter: grayscale(100%);
 			}
 
 			.people-icon:hover,
-			.set-icon:hover {
+			.set-icon:hover,
+			.out-icon:hover {
 				cursor: pointer;
 				filter: grayscale(0%);
 			}
