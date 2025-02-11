@@ -10,11 +10,11 @@
         <!-- 表单 -->
         <form class="form">
             <span class="input-span">
-                <label for="username" class="label">账号</label>
-                <input type="username" name="username" id="username" autocomplete="off" /></span>
+                <label for="username" class="label">{{ placeholderUSN }}</label>
+                <input v-model="username" type="username" name="username" id="username" autocomplete="off" /></span>
             <span class="input-span">
-                <label for="password" class="label">密码</label>
-                <input type="password" name="password" id="password" autocomplete="off" /></span>
+                <label for="password" class="label">{{ placeholderPSD }}</label>
+                <input v-model="password" type="password" name="password" id="password" autocomplete="off" /></span>
             <span class="span"><a href="#">忘记密码?</a></span>
             <input class="submit" type="submit" value="登录" />
             <span class="span">还没有账号? <a href="">注册</a></span>
@@ -59,8 +59,8 @@ const store = useStore();
 
 const username = ref('');
 const password = ref('');
-const placeholderUSN = ref('账号:')
-const placeholderPSD = ref('密码:')
+const placeholderUSN = ref('账号')
+const placeholderPSD = ref('密码')
 
 const handleFocusUSN = () => {
     placeholderUSN.value = '请输入账号'
@@ -123,6 +123,12 @@ onUpdated(() => {
     left: 80%;
     z-index: 1;
     transform: translate(-50%, -50%);
+    padding: 20px 20px;
+    box-sizing: border-box;
+}
+.form:hover {
+    border-radius: 12px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
 }
 
 .form .input-span {
@@ -144,6 +150,7 @@ onUpdated(() => {
     gap: 0.5rem;
     background-color: var(--clr-alpha);
     outline: 2px solid var(--bg-dark);
+    color: var(--clr);
 }
 
 .form input[type="username"]:focus,
