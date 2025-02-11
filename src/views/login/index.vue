@@ -6,20 +6,23 @@
 -->
 
 <template>
-    <!-- 表单 -->
-    <form class="form">
-        <span class="input-span">
-            <label for="username" class="label">账号</label>
-            <input type="username" name="username" id="username" autocomplete="off" /></span>
-        <span class="input-span">
-            <label for="password" class="label">密码</label>
-            <input type="password" name="password" id="password" autocomplete="off" /></span>
-        <span class="span"><a href="#">忘记密码?</a></span>
-        <input class="submit" type="submit" value="登录" />
-        <span class="span">还没有账号? <a href="">注册</a></span>
-    </form>
-    <!-- 背景 -->
-    <div class="app-container">
+    <div class="login-container">
+        <!-- 表单 -->
+        <form class="form">
+            <span class="input-span">
+                <label for="username" class="label">账号</label>
+                <input type="username" name="username" id="username" autocomplete="off" /></span>
+            <span class="input-span">
+                <label for="password" class="label">密码</label>
+                <input type="password" name="password" id="password" autocomplete="off" /></span>
+            <span class="span"><a href="#">忘记密码?</a></span>
+            <input class="submit" type="submit" value="登录" />
+            <span class="span">还没有账号? <a href="">注册</a></span>
+        </form>
+        <!-- 背景 -->
+        <div class="meteor"></div>
+        <div class="meteor"></div>
+        <div class="meteor"></div>
         <div class="earth-background">
             <div class="bg-cover"></div>
             <div class="earth"></div>
@@ -40,7 +43,6 @@ import {
 } from 'vue';
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router';
-
 
 defineOptions({
     name: 'login'
@@ -185,14 +187,55 @@ onUpdated(() => {
     color: var(--clr);
 }
 
+// 流星
+.meteor {
+    position: absolute;
+    z-index: 999;
+    top: -10px;
+    right: -10px;
+    width: 1px;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    transform-origin: top right;
+    transform: rotate(45deg);
+    animation: meteorFall 3s linear infinite;
+    animation-delay: calc(-1 * (6s * var(--random)));
+}
+
+@keyframes meteorFall {
+    0% {
+        top: -10px;
+        right: -10px;
+        opacity: 1;
+    }
+
+    100% {
+        top: 100vh;
+        right: 100vw;
+        opacity: 0;
+    }
+}
+
+/* 随机延迟 */
+.meteor:nth-child(1) {
+    --random: 0.2;
+}
+
+.meteor:nth-child(2) {
+    --random: 0.5;
+}
+
+.meteor:nth-child(3) {
+    --random: 0.8;
+}
+
 // 背景效果
-.app-container {
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background: linear-gradient(180deg, #001f3d, #000000);
-    /* 深蓝到黑色渐变 */
     overflow: hidden;
 }
 
