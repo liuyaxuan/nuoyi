@@ -1,6 +1,9 @@
 # my-nuoyi
 
-# 感谢 https://uiverse.io/ 提供的CSS和HTML模板设计代码支持
+# 感谢
+```
+https://uiverse.io/ 提供的CSS和HTML模板设计代码支持
+```
 
 ## Project setup
 ```
