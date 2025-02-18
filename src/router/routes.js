@@ -16,18 +16,11 @@ import __404 from '@/views/404.vue'
 export const constantRoute = [
     {
         path: '/',
-        redirect: '/index',
-        component: index,
+        redirect: '/login',
+        component: login,
         name: 'default',
         hidden: true,
     },
-    // {
-    //     path: '/login',
-    //     component: login,
-    //     name: 'login',
-    //     meta: { title: '登录', icon: 'default' },
-    //     hidden: false,
-    // },
     {
         path: '/login',
         component: login,
@@ -70,6 +63,34 @@ export const constantRoute = [
                     sidebar: __404
                 },
                 meta: { title: '404', icon: 'default' }
+            },
+        ]
+    },
+    {
+        path: '/index',
+        component: index,
+        name: 'index',
+        meta: { title: '概览2', icon: 'default' },
+		hidden: false,
+        children: [
+            {
+                path: 'home',
+                name: 'home',
+                icon: 'house',
+                hidden: false,
+                components: {
+                    sidebar: home
+                },
+                meta: { title: '主页2', icon: 'default' }
+            },
+            {
+                path: 'leaflet',
+                name: 'leaflet',
+                hidden: false,
+                components: {
+                    sidebar: map
+                },
+                meta: { title: 'leaflet2', icon: 'default' }
             },
         ]
     },

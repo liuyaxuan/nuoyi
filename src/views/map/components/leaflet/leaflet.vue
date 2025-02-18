@@ -97,8 +97,26 @@
 			return
 		}
 
-		// OSM底图
-		const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		// OSM底图（浅色）
+		// const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		// 	maxZoom: 19,
+		// 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		// }).addTo(state.map);
+
+		// Mapbox底图（深色）
+		// const tiles = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieGlhb3lpbmdsaSIsImEiOiJjangxM2NuZWcwNW0yNDNxcnZ2MWg4eWVxIn0.iL97JjzDipkcocfVTVbHfw", {
+		// 	maxZoom: 19,
+		// 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		// }).addTo(state.map);
+
+		// Mapbox底图（彩色卫星图）
+		// const tiles = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieGlhb3lpbmdsaSIsImEiOiJjangxM2NuZWcwNW0yNDNxcnZ2MWg4eWVxIn0.iL97JjzDipkcocfVTVbHfw", {
+		// 	maxZoom: 19,
+		// 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		// }).addTo(state.map);
+		
+		// stadiamaps底图（深色）
+		const tiles = L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}.png", {
 			maxZoom: 19,
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 		}).addTo(state.map);
@@ -122,7 +140,7 @@
 			color: 'transparent', // 边框颜色
 			weight: 0, // 边框宽度
 			fillColor: 'rgb(49, 62, 106)', // 填充颜色
-			fillOpacity: 0.1 // 填充透明度
+			fillOpacity: 0 // 填充透明度
 		}).addTo(state.map);
 		map_cover.value.push(rectangle)
 	}

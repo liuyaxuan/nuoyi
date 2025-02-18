@@ -16,7 +16,7 @@
                 <label for="password" class="label">{{ placeholderPSD }}</label>
                 <input v-model="password" type="password" name="password" id="password" autocomplete="off" /></span>
             <span class="span"><a href="#">忘记密码?</a></span>
-            <input class="submit" type="submit" value="登录" />
+            <div class="submit" @click="handleSubmit">登录</div>
             <span class="span">还没有账号? <a href="">注册</a></span>
         </form>
         <!-- 背景 -->
@@ -76,11 +76,11 @@ const handleBlurPSD = () => {
     placeholderPSD.value = '密码:'
 }
 
-const handleLogin = () => {
+const handleSubmit = () => {
     if (username.value === '' || password.value === '') {
         return;
     }
-    $router.replace('/');
+    $router.replace('/index');
 }
 
 const handleInForm = () => {
@@ -168,6 +168,7 @@ onUpdated(() => {
     padding: 1rem 0.75rem;
     width: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 0.5rem;
     border-radius: 3rem;
@@ -270,7 +271,7 @@ onUpdated(() => {
 .earth {
     width: 100%;
     height: 100%;
-    background: url('https://images.unsplash.com/photo-1634176866089-b633f4aec882?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center;
+    background: url('@/assets/images/earth.png') no-repeat center center;
     background-size: 135% auto;
     border-radius: 50%;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);

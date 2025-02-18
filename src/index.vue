@@ -5,7 +5,7 @@
 		<!-- main -->
 		<el-container>
 			<!-- 菜单 -->
-			<el-aside width="auto" class="">
+			<el-aside width="auto" class="el-aside-custom">
 				<div class="head-title">
 					<!-- <el-icon><Van /></el-icon> -->
 					<img :src="elephant" class="header-title-icon" />
@@ -20,7 +20,7 @@
 					<div class="el-header-container">
 						<img :src="peopleSafeOne" class="people-icon" @click="handlePeople" />
 						<img :src="moreOne" class="set-icon" @click="handleMore" />
-						<img :src="outbound" class="out-icon" @click="handleOut" />
+						<!-- <img :src="outbound" class="out-icon" @click="handleOut" /> -->
 					</div>
 				</el-header>
 				<el-main class="el-main-container">
@@ -160,6 +160,10 @@ export default {
 
 	.el-aside {
 		background-color: darkgray;
+	}
+	.el-aside-custom {
+		display: flex;
+		flex-direction: column;
 	}
 
 	.el-header {
