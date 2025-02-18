@@ -67,34 +67,6 @@ export const constantRoute = [
         ]
     },
     {
-        path: '/index',
-        component: index,
-        name: 'index',
-        meta: { title: '概览2', icon: 'default' },
-		hidden: false,
-        children: [
-            {
-                path: 'home',
-                name: 'home',
-                icon: 'house',
-                hidden: false,
-                components: {
-                    sidebar: home
-                },
-                meta: { title: '主页2', icon: 'default' }
-            },
-            {
-                path: 'leaflet',
-                name: 'leaflet',
-                hidden: false,
-                components: {
-                    sidebar: map
-                },
-                meta: { title: 'leaflet2', icon: 'default' }
-            },
-        ]
-    },
-    {
         path: '/:pathMatch(.*)*',
         redirect: '/404',
         name: 'Any',
