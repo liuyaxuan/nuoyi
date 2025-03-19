@@ -1,31 +1,9 @@
 <template>
     <div class="menu-container">
-        <div class="menu-item" v-for="(item, index) in refRac.menuData" :key="item.path">
-            <div
-                v-if="!item.hidden"
-                :class="`ny-menu menu-title parent-${index}`"
-                @click="handleMenuToggle(item, index)"
-            >
-                <el-icon>
-                    <house />
-                </el-icon>
-                <span>{{ item.meta.title || '' }}</span>
-            </div>
-            <div :class="`ny-menu menu-children children-${index}`">
-                <div
-                    class="ny-menu menu-children-item"
-                    v-for="(childrenItem, index2) in item.children"
-                    :key="childrenItem.path"
-                    v-show="!childrenItem.hidden"
-                    @click.stop="handleMenuSelect($event)"
-                >
-                    <router-link
-                        :to="item.path + '/' + childrenItem.path">
-                        {{ childrenItem.meta.title || '' }}
-                    </router-link>
-                </div>
-            </div>
-        </div>
+        <ny-menu
+            :data="refRac.menuData"
+            :propsLevel="refRac.menuLevel"
+        ></ny-menu>
     </div>
 </template>
 
@@ -40,10 +18,15 @@ import {
 } from 'vue';
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
+// 组件
+import nyMenu from './menu.vue'
 
 export default {
     name: "my-menu",
     props: [],
+    components: {
+        nyMenu
+    },
     setup(props, context) {
         const store = useStore();
         const $router = useRouter(); // 获取路由实例
@@ -57,7 +40,8 @@ export default {
         const menuHeight = ref(0);
 
         const refRac = reactive({
-            menuData: []
+            menuData: [],
+            menuLevel: 1, // 控制判断菜单层级
         })
 
         // 监听
@@ -75,6 +59,7 @@ export default {
         const handleMenuToggle = (node, key) => {
             // 展开、收起动作
             const content = document.getElementsByClassName('children-' + key)[0];
+            console.log('node=>', node)
             if (content.offsetHeight > 0) {
                 menuHeight.value = content.offsetHeight;
                 const timer = setInterval(() => {
@@ -92,7 +77,7 @@ export default {
                         clearInterval(timer);
                         menuHeight.value = h;
                     }
-                }, 5) 
+                }, 5)
             }
         }
 
@@ -178,6 +163,7 @@ export default {
         font-size: 16px;
     }
 }
+
 .menu-item {
     width: 100%;
     height: auto;
@@ -187,21 +173,33 @@ export default {
     overflow-y: hidden;
 }
 
+.menu-icon {
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+}
 
 .hidden {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s ease-out;
 }
+
 .expanded {
     transition: max-height 0.5s ease-in;
 }
 
 .menu-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
     box-sizing: border-box;
     padding: 10px 10px;
 }
-.menu-children-item, .menu-title {
+
+.menu-children-item,
+.menu-title {
     cursor: pointer;
     transition: all 0.3s;
 
@@ -209,6 +207,7 @@ export default {
         background-color: #3f9eff;
     }
 }
+
 .menu-children-item a {
     box-sizing: border-box;
     padding: 10px 0px 10px 40px;
