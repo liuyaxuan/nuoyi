@@ -18,14 +18,23 @@
 				</el-popover>
 				<span>请输入合法JSON格式</span>
 			</div>
-			<el-input
+			<ny-input
+				class="el-input-textarea"
+				v-model="textareaData"
+				:disabled="disabled"
+			    type="textarea"
+				placeholder="输入JSON..."
+				@paste="handlePaste"
+			></ny-input>
+			<!-- <el-input
 				class="el-input-textarea"
 			    v-model="textareaData"
 			    type="textarea"
 				resize="none"
 			    placeholder="请输入JSON..."
+				:disabled="disabled"
 				@paste="handlePaste"
-			/>
+			/> -->
 			<div class="error-tips">{{ errorTips }}</div>
 		</div>
 	</div>
@@ -40,17 +49,32 @@
 		render,
 		defineComponent,
 	} from 'vue';
+	// 组件
+	import nyInput from '@/components/input/index.vue';
 	
 	// 当前实例
 	const app = getCurrentInstance();
 	// 挂载到全局的方法
 	const proxy = app.proxy;
+
+	// 自定义组件
+	defineComponent({
+		components: {
+			nyInput
+		}
+	})
+
 	// props
 	const props = defineProps({
 		// 数据
 		handleMapData: {
 			type: Function
 		},
+		// 是否禁用
+		disabled: {
+			type: Boolean,
+			default: true
+		}
 	});
 	// 响应式状态
 	const textareaData = ref('');
@@ -168,7 +192,7 @@
 				height: 100%;
 				padding: 0px 10px 10px 10px;
 				box-sizing: border-box;
-				overflow-y: auto;
+				// overflow-y: auto;
 				
 				::v-deep .el-textarea__inner {
 					height: 100% !important;

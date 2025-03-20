@@ -6,25 +6,38 @@
         placeholder：输入框提示
         type: 输入框类型，默认text
         name: 输入框name
-		size: 组件大小，可选值：small、medium、large
+		size: 组件大小，可选值：small、medium、large (textarea 设置 size 无效)
         autocomplete: 输入框自动完成，可选值：on、off
         disabled: 输入框是否禁用，可选值：true、false
 	author: Liu.Y.X
 	date: 2025-01-21
+    update: [2025-03-20, 增加 textarea 类型，增加 size 属性，增加 disabled 属性]
 
 -->
 
 <template>
     <div class="ny-input-container">
-        <input class="ny-input" :placeholder="placeholder" type="text" name="text" :autocomplete="autocomplete"
-            :value="inputValue" @input="handleInput" />
-        <img v-if="inputValue" class="clear-btn" :src="deleteICON" alt="" @click="handleClear" />
+        <template v-if="type === 'text'">
+            <input :class="'ny-input ' + size" :placeholder="placeholder" type="text" name="text" :autocomplete="autocomplete"
+                :value="inputValue" @input="handleInput" />
+            <img v-if="inputValue" class="clear-btn" :src="deleteICON" alt="" @click="handleClear" />
+        </template>
+        <template v-else-if="type === 'textarea'">
+            <textarea
+                class="ny-textarea"
+                name="textarea"
+                :disabled="disabled"
+                :value="inputValue"
+                @input="handleInput"
+            ></textarea>
+        </template>
     </div>
 </template>
 
 <script setup>
 import {
     ref,
+    watch,
     onBeforeMount,
     onMounted,
     onBeforeUpdate,
@@ -44,11 +57,16 @@ defineOptions({
     name: 'ny-input'
 })
 
-defineProps({
+const props = defineProps({
     // 输入框内容
     modelValue: {
         type: String,
         required: true
+    },
+    // 输入框类型
+    type: {
+        type: String,
+        default: 'text',
     },
     // 大小
     size: {
@@ -170,6 +188,20 @@ onUpdated(() => {
 
     .set-scale(@scale) {
         transform: scale(@scale);
+    }
+
+    // 多行文本框
+    .ny-textarea {
+        width: 100%;
+        height: 100%;
+        resize: none;
+        box-sizing: border-box;
+        padding: 5px;
+        margin: 0;
+        border-radius: 12px;
+        border: 1.5px solid lightgrey;
+        outline: none;
+        transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
     }
 }
 </style>

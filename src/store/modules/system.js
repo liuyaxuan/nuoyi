@@ -10,7 +10,11 @@ const system = {
 		},
 	},
 
-	actions: {}
+	actions: {
+		SET_LOADING({ commit }, loading) {
+			commit('SET_LOADING', loading)
+		}
+	}
 }
 
 export default system;

@@ -13,13 +13,14 @@ import {
 } from '@/utils/index.js'
 
 // 静态图片资源
-import redPoint from '@/assets/icons/start.png'
+import startPoint from '@/assets/icons/start.png'
+import endPoint from '@/assets/icons/end.png'
 
-export function useMarker(map, data) {
+export function useMarker(map, data, type) {
 	let latlngs = [];
 	// 自定义marker图标
 	const customIcon = L.icon({
-		iconUrl: redPoint,
+		iconUrl: type === 'start' ? startPoint : endPoint,
 		iconSize: [15, 20], // 图标的大小
 	});
 	let coordinates = [];

@@ -51,6 +51,7 @@ import {
 	onBeforeUpdate,
 	onUpdated,
 } from 'vue';
+import { useStore } from 'vuex'
 
 // icon 资源
 import peopleSafeOne from '@/assets/icons/blue/1_people-safe-one.svg';
@@ -75,6 +76,7 @@ export default {
 		nyDialog
 	},
 	setup() {
+		const store = useStore();
 		let isCollapse = ref(false);
 		let isVisible = ref(false);
 		const refRac = reactive({
@@ -100,7 +102,7 @@ export default {
 		});
 
 		onMounted(() => {
-
+			// store.commit('system/SET_LOADING', true)
 		});
 
 		onBeforeUpdate(() => {
