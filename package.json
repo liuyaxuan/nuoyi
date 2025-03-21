@@ -16,6 +16,7 @@
     "leaflet": "^1.9.4",
     "leaflet-contextmenu": "^1.4.0",
     "leaflet-polylinedecorator": "^1.6.0",
+    "leaflet.bigimage": "^1.0.1",
     "leaflet.heat": "^0.2.0",
     "leaflet.markercluster": "^1.5.3",
     "typescript": "^5.7.2",

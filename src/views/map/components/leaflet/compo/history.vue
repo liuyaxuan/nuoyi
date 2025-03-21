@@ -1,27 +1,27 @@
 <template>
 	<div id="menu-container" class="drawer menu-container">
 		<div class="trapezoid" @click="handleOpen('menu-container')">
-			<div class="trapezoid-inner">历史</div>
+			<div class="trapezoid-inner">列表</div>
 		</div>
 		<!-- 历史列表 -->
 		<div class="menu-container-info">
-			<el-divider content-position="left">历史图层覆盖物列表</el-divider>
+			<el-divider content-position="left">图层覆盖物列表</el-divider>
 			<div class="layer-history-list">
 				<div
 					class="history-item"
-					v-for="(item, index) in historyListData"
+					v-for="(item, index) in listData"
 					:key="index"
 					@mouseover="handleOver('arrow' + index)"
 					@mouseleave="handLeave('arrow' + index)"
 				>
 					<div :id="'arrow' + index" class="arrow-icon"></div>
-					<div class="history-item-name">{{ item.name }}</div>
+					<div class="history-item-name">{{ 'list' + index }}</div>
 					<div class="fncs">
 						<el-button
 							type="primary"
 							size="small"
 							round
-							@click="handleUsing"
+							@click="handleUsing(item)"
 						>引用</el-button>
 						<el-button
 							type="danger"
@@ -38,6 +38,7 @@
 <script setup>
 	import {
 		ref,
+		watch,
 		onMounted,
 		defineProps,
 		getCurrentInstance,
@@ -49,13 +50,30 @@
 	const proxy = app.proxy;
 	// props
 	const props = defineProps({
+		// 数据
+		handleMapData: {
+			type: Function
+		},
 		map: {
 			type: Object,
 			default: () => {},
 		},
+		data: {
+			type: Array,
+			default: () => []
+		}
 	});
 	// 响应式状态
-	const historyListData = ref([{ name: '测试1' }, { name: '测试2' }]);
+	const listData = ref([]);
+
+	// 监听
+	watch(() => props.data, (nVal) => {
+		listData.value = props.data || [];
+	})
+
+	const init = () => {
+
+	}
 	
 	const handleOpen = (id) => {
 		let drawer = document.getElementsByClassName('drawer');
@@ -82,12 +100,12 @@
 		item.classList.remove('arrow')
 	}
 	
-	const handleUsing = () => {
-		
+	const handleUsing = (data) => {
+		props.handleMapData(data);
 	}
 	
 	onMounted(() => {
-		
+		init();
 	})
 	
 </script>

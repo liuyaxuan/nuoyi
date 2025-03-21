@@ -10,6 +10,8 @@
 		<!-- 地图功能选项菜单 -->
 		<my-maphistory
 			:map="state.map"
+			:data="state.listData"
+			:handleMapData="handleMapData"
 		></my-maphistory>
 		<!-- 地图配置项 -->
 		<my-config></my-config>
@@ -19,6 +21,7 @@
 			<div :class="state.type === 'marker' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('marker')">标记</div>
 			<div :class="state.type === 'line' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('line')">轨迹</div>
 			<div :class="state.type === 'polygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('polygon')">区域</div>
+			<div :class="state.type === 'download' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="downloadImg('download')">下载</div>
 		</div>
 	</div>
 </template>
@@ -48,6 +51,8 @@
 	import 'leaflet.heat';
 	// 导入leaflet-polylinedecorator
 	import  "leaflet-polylinedecorator";
+	import "leaflet.bigimage/dist/Leaflet.BigImage.min.js";
+	import "leaflet.bigimage/dist/Leaflet.BigImage.min.css";
 	// 页面组件
 	import myTextarea from './compo/textarea.vue'
 	import myMaphistory from './compo/history.vue'
@@ -81,13 +86,28 @@
 		map: {}, // 地图实例
 		data: null, // 输入数据
 		type: '', // 绘制类型
+		listData: [], // 数据列表
 	});
+
+	watch(() => state.type, (newVal, oldVal) => {
+	    if (newVal === 'download') {
+			document.querySelector('.leaflet-control-container').style.display = 'block';
+		} else {
+			document.querySelector('.leaflet-control-container').style.display = 'none'
+		}
+	})
 
 	const init = () => {
 		// 初始化地图实例
 		state.map = L.map('map', {
 			preferCanvas: false
 		}).setView([30.662325, 104.065716], 9);
+		// 下载地图
+		L.control.BigImage({
+			position: 'topleft',
+			inputTitle: '缩放比例(1-10)',
+			downloadTitle: '下载图片',
+		}).addTo(state.map);
 		// 移除默认的放大缩小按钮
 		state.map.removeControl(state.map.zoomControl);
 		state.map.removeControl(state.map.attributionControl);
@@ -103,6 +123,10 @@
 		setMapType('osm');
 		// 地图设置遮罩
 		handleMapZoomend();
+	}
+
+	const downloadImg = (type) => {
+		state.type = type;
 	}
 
 	const setMapType = (type) => {
@@ -233,6 +257,10 @@
 			console.log('请输入数据中存在 type 不为 marker 的数据')
 			return
 		}
+
+		// 列表
+		// state.listData = data;
+
 		// 绘制
 		if(state.type === 'polygon') {
 			usePolygon(state.map, state.data);
@@ -338,5 +366,18 @@
 				background-color: #3f9eff;
 			}
 		}
+	}
+
+	::v-deep .leaflet-control-container {
+		display: none;
+	}
+	::v-deep .leaflet-top {
+		top: 173px;
+	}
+	::v-deep .leaflet-left {
+		left: 55px;
+	}
+	::v-deep .download-button {
+		background: #3f9eff;
 	}
 </style>

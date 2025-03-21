@@ -14,13 +14,6 @@ import {
 } from '@/utils/index.js'
 
 export function usePolyline(map, data) {
-    // 标记出起点、终点
-    const { coordinates } = data;
-    const start = coordinates[0][0];
-    const end = coordinates[0][coordinates[0].length - 1];
-    // 绘制起点、终点
-    useMarker(map, start, 'start');
-    useMarker(map, end, 'end');
     // 判断数据来源格式
     var latlngs = [];
     // 传入数组
@@ -49,7 +42,7 @@ export function usePolyline(map, data) {
                             latlngs.push(coordinates[j]);
                         }
                     }
-                    const polyline = L.polyline(latlngs, { color: 'rgba(255, 0, 255, 0.8)', weight: 3, fill: false }).addTo(map);
+                    const polyline = L.polyline(latlngs, { color: 'rgba(255, 0, 255, 0.8)', weight: 1, fill: false }).addTo(map);
                     map.fitBounds(polyline.getBounds());
                 }
                 return
@@ -60,6 +53,13 @@ export function usePolyline(map, data) {
     }
     // 传入对象
     if (isObject(data)) {
+        // 标记出起点、终点
+        const start = data.coordinates[0][0];
+        const end = data.coordinates[0][data.coordinates[0].length - 1];
+        // 绘制起点、终点
+        useMarker(map, start, 'start');
+        useMarker(map, end, 'end');
+        // 绘制路径
         let key = ''
         if (data.hasOwnProperty('coordinates')) {
             key = 'coordinates'
@@ -81,5 +81,6 @@ export function usePolyline(map, data) {
         }
     }
 
-    var polyline = L.polyline(latlngs, { color: 'rgba(255, 0, 255, 0.8)', weight: 2, fill: false }).addTo(map);
+    var polyline = L.polyline(latlngs, { color: 'red', weight: 1, fill: false }).addTo(map);
+    map.fitBounds(polyline.getBounds());
 }
