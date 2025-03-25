@@ -13,7 +13,7 @@ import {
     isObject,
 } from '@/utils/index.js'
 
-export function usePolyline(map, data) {
+export function usePolyline(map, data, bigImage) {
     // 判断数据来源格式
     var latlngs = [];
     // 传入数组
@@ -57,8 +57,8 @@ export function usePolyline(map, data) {
         const start = data.coordinates[0][0];
         const end = data.coordinates[0][data.coordinates[0].length - 1];
         // 绘制起点、终点
-        useMarker(map, start, 'start');
-        useMarker(map, end, 'end');
+        useMarker(map, start, 'start', bigImage);
+        useMarker(map, end, 'end', bigImage);
         // 绘制路径
         let key = ''
         if (data.hasOwnProperty('coordinates')) {

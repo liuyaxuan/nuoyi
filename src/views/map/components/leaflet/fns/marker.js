@@ -16,7 +16,7 @@ import {
 import startPoint from '@/assets/icons/start.png'
 import endPoint from '@/assets/icons/end.png'
 
-export function useMarker(map, data, type) {
+export function useMarker(map, data, type, bigImage) {
 	let latlngs = [];
 	// 自定义marker图标
 	const customIcon = L.icon({
@@ -70,6 +70,7 @@ export function useMarker(map, data, type) {
 		// 绘制
 		for (let i = 0; i < latlngs.length; i++) {
 			const markers = L.marker(latlngs[i] || [], {
+				renderer: L.canvas(),
 				icon: customIcon,
 				draggable: false
 			}).bindPopup('<p>' + 'lng:' + latlngs[i][1] + ', lat:' + latlngs[i][0] + '</p>').addTo(map);

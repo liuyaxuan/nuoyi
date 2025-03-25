@@ -1,28 +1,39 @@
 <template>
-	<div class="map-container-leaflet">
+	<div ref="leafletMap" class="map-container-leaflet">
 		<!-- leaflet map container -->
 		<div id="map"></div>
-		<!-- 接收输入数据多行文本框 -->
-		<my-textarea
-			:disabled="state.type === ''"
-			:handleMapData="handleMapData"
-		></my-textarea>
-		<!-- 地图功能选项菜单 -->
-		<my-maphistory
-			:map="state.map"
-			:data="state.listData"
-			:handleMapData="handleMapData"
-		></my-maphistory>
-		<!-- 地图配置项 -->
-		<my-config></my-config>
+		<!-- 下载图片时，隐藏template 中的工具菜单和配置菜单 -->
+		<template v-if="visibleConfig">
+			<!-- 接收输入数据多行文本框 -->
+			<my-textarea
+				:disabled="state.type === ''"
+				:handleMapData="handleMapData"
+			></my-textarea>
+			<!-- 地图功能选项菜单 -->
+			<my-maphistory
+				:map="state.map"
+				:data="state.listData"
+				:handleMapData="handleMapData"
+			></my-maphistory>
+			<!-- 地图配置项 -->
+			<my-config></my-config>
 
-		<!-- 工具栏 -->
-		<div class="map-tools">
-			<div :class="state.type === 'marker' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('marker')">标记</div>
-			<div :class="state.type === 'line' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('line')">轨迹</div>
-			<div :class="state.type === 'polygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('polygon')">区域</div>
-			<div :class="state.type === 'download' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="downloadImg('download')">下载</div>
-		</div>
+			<!-- 工具栏 -->
+			<div class="map-tools">
+				<div :class="state.type === 'marker' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('marker')">
+					<img :src="markerIcon" />
+				</div>
+				<div :class="state.type === 'line' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('line')">
+					<img :src="lineIcon" />
+				</div>
+				<div :class="state.type === 'polygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('polygon')">
+					<img :src="polygonIcon" />
+				</div>
+				<div :class="state.type === 'download' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="downloadImg('download')">
+					<img :src="downloadIcon" />
+				</div>
+			</div>
+		</template>
 	</div>
 </template>
 
@@ -51,8 +62,13 @@
 	import 'leaflet.heat';
 	// 导入leaflet-polylinedecorator
 	import  "leaflet-polylinedecorator";
+	//	导入 leaflet-bigimage
 	import "leaflet.bigimage/dist/Leaflet.BigImage.min.js";
 	import "leaflet.bigimage/dist/Leaflet.BigImage.min.css";
+	// 导入 leaflet-image
+	import leafletImage from 'leaflet-image';
+	// 导入 dom-to-image
+	import domtoimage from 'dom-to-image';
 	// 页面组件
 	import myTextarea from './compo/textarea.vue'
 	import myMaphistory from './compo/history.vue'
@@ -61,6 +77,11 @@
 	import { useMarker } from './fns/marker.js'
 	import { usePolyline } from './fns/lines.js'
 	import { usePolygon } from './fns/polygon.js'
+	// icon
+	import markerIcon from '@/assets/icons/blue/marker.svg'
+	import lineIcon from '@/assets/icons/blue/line.svg'
+	import polygonIcon from '@/assets/icons/blue/polygon.svg'
+	import downloadIcon from '@/assets/icons/blue/download.svg'
 
 	defineOptions({
 		name: 'mapLeaflet'
@@ -84,10 +105,13 @@
 	const mapLayer = ref([]); // 绘制到地图的各layer层
 	const state = reactive({
 		map: {}, // 地图实例
+		bigImage: null, // 下载地图实例
 		data: null, // 输入数据
 		type: '', // 绘制类型
 		listData: [], // 数据列表
 	});
+	const visibleConfig = ref(true); // 是否下载图片中
+	const leafletMap = ref(null); // refs获取leafletMap的引用
 
 	watch(() => state.type, (newVal, oldVal) => {
 	    if (newVal === 'download') {
@@ -100,14 +124,16 @@
 	const init = () => {
 		// 初始化地图实例
 		state.map = L.map('map', {
-			preferCanvas: false
+			preferCanvas: true
 		}).setView([30.662325, 104.065716], 9);
 		// 下载地图
-		L.control.BigImage({
-			position: 'topleft',
-			inputTitle: '缩放比例(1-10)',
-			downloadTitle: '下载图片',
-		}).addTo(state.map);
+		// state.bigImage = L.control.BigImage({
+		// 	position: 'topleft',
+		// 	inputTitle: '缩放比例(1-10)',
+		// 	downloadTitle: '下载图片',
+		// 	printControlLabel: '设置',
+		// 	printControlClasses: ['leaflet-control-down']
+		// }).addTo(state.map);
 		// 移除默认的放大缩小按钮
 		state.map.removeControl(state.map.zoomControl);
 		state.map.removeControl(state.map.attributionControl);
@@ -126,7 +152,19 @@
 	}
 
 	const downloadImg = (type) => {
-		state.type = type;
+		// state.type = type;
+		visibleConfig.value = false;
+		domtoimage.toPng(leafletMap.value) // 将DOM节点转换为PNG图片
+        .then(function (dataUrl) {
+			let link = document.createElement('a'); // 创建一个a元素来下载图片
+			link.download = 'screenshot.png'; // 设置下载文件名
+			link.href = dataUrl; // 设置下载链接为图片的dataURL
+			link.click(); // 模拟点击下载图片
+			visibleConfig.value = true;
+        })
+        .catch(function (error) {
+        	console.error('Oops, something went wrong!', error);
+        });
 	}
 
 	const setMapType = (type) => {
@@ -268,12 +306,12 @@
 		}
 
 		if (state.type === 'line') {
-			usePolyline(state.map, state.data);
+			usePolyline(state.map, state.data, state.bigImage);
 			return
 		}
 
 		if (state.type === 'marker') {
-			useMarker(state.map, state.data);
+			useMarker(state.map, state.data, 'start');
 			return
 		}
 	}
@@ -343,7 +381,7 @@
 
 				&:hover {
 					color: #fff;
-					background-color: #3f9eff;
+					background-color: #cde3fa;
 					animation: pulse 0.5s infinite;
 				}
 
@@ -363,7 +401,7 @@
 			.map-tools-item-active {
 				color: #fff;
 				transform: scale(1.2);
-				background-color: #3f9eff;
+				background-color: #cde3fa;
 			}
 		}
 	}
@@ -376,6 +414,19 @@
 	}
 	::v-deep .leaflet-left {
 		left: 55px;
+	}
+	::v-deep .leaflet-control-down {
+		font-size: 10px;
+		font-weight: bold;
+		border-radius: 6px;
+		color: #fff;
+		background: #3f9eff;
+		border-bottom: 0px;
+	}
+	::v-deep .leaflet-control-down:hover {
+		color: #fff;
+		background: #3f9eff;
+		cursor: pointer;
 	}
 	::v-deep .download-button {
 		background: #3f9eff;
