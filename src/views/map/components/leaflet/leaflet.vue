@@ -17,6 +17,24 @@
 			></my-maphistory>
 			<!-- 地图配置项 -->
 			<my-config></my-config>
+			<!-- 弹窗 -->
+			<ny-dialog
+				:title='dialog.title'
+				:show="dialog.isVisible"
+				:width="400"
+				@close="dialog.isVisible = false"
+			>
+				<label>选择省:</label>
+				<select class="select-province" v-model="selectedProvince" @change="handleProvinceChange">
+					<option value="">请选择</option> <!-- 默认选项 -->
+					<option
+						class="province-item"
+						v-for="item in provinces"
+						:key="item.code"
+						:value="item.code"
+					>{{ item.name }}</option>
+				</select>
+			</ny-dialog>
 
 			<!-- 工具栏 -->
 			<div class="map-tools">
@@ -28,6 +46,12 @@
 				</div>
 				<div :class="state.type === 'polygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('polygon')">
 					<img :src="polygonIcon" />
+				</div>
+				<div :class="state.type === 'editpPolygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('editpPolygon')">
+					<img :src="editpPolygonIcon" />
+				</div>
+				<div :class="state.type === 'search' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('search')">
+					<img :src="searchIcon" />
 				</div>
 				<div :class="state.type === 'download' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="downloadImg('download')">
 					<img :src="downloadIcon" />
@@ -51,6 +75,11 @@
 		defineProps,
 		defineComponent,
 	} from 'vue';
+	// api请求
+	import {
+		getRoadName,
+		getRoadData
+	} from "@/api/map/road.js";
 	// leaflet map
 	import L from 'leaflet';
 	import 'leaflet/dist/leaflet.css';
@@ -73,14 +102,19 @@
 	import myTextarea from './compo/textarea.vue'
 	import myMaphistory from './compo/history.vue'
 	import myConfig from './compo/config.vue'
+	import nyDialog from '@/components/dialog/index.vue'
 	// 组合式函数
 	import { useMarker } from './fns/marker.js'
 	import { usePolyline } from './fns/lines.js'
 	import { usePolygon } from './fns/polygon.js'
+	// 行政区域名称配置
+	import { provinces } from '@/utils/config.js'
 	// icon
 	import markerIcon from '@/assets/icons/blue/marker.svg'
 	import lineIcon from '@/assets/icons/blue/line.svg'
 	import polygonIcon from '@/assets/icons/blue/polygon.svg'
+	import editpPolygonIcon from '@/assets/icons/blue/editPolygon.svg'
+	import searchIcon from '@/assets/icons/blue/search.svg'
 	import downloadIcon from '@/assets/icons/blue/download.svg'
 
 	defineOptions({
@@ -109,9 +143,14 @@
 		data: null, // 输入数据
 		type: '', // 绘制类型
 		listData: [], // 数据列表
+		isVisible: false, // 弹窗显示
 	});
+	const dialog = reactive({
+		isVisible: false, // 弹窗显示
+	})
 	const visibleConfig = ref(true); // 是否下载图片中
 	const leafletMap = ref(null); // refs获取leafletMap的引用
+	const selectedProvince = ref(''); // 选中的省份
 
 	watch(() => state.type, (newVal, oldVal) => {
 	    if (newVal === 'download') {
@@ -126,14 +165,6 @@
 		state.map = L.map('map', {
 			preferCanvas: true
 		}).setView([30.662325, 104.065716], 9);
-		// 下载地图
-		// state.bigImage = L.control.BigImage({
-		// 	position: 'topleft',
-		// 	inputTitle: '缩放比例(1-10)',
-		// 	downloadTitle: '下载图片',
-		// 	printControlLabel: '设置',
-		// 	printControlClasses: ['leaflet-control-down']
-		// }).addTo(state.map);
 		// 移除默认的放大缩小按钮
 		state.map.removeControl(state.map.zoomControl);
 		state.map.removeControl(state.map.attributionControl);
@@ -248,9 +279,32 @@
 	 */
 	const handleDraw = (type) => {
 	    state.type = type;
+		if (type === 'search') {
+			dialog.title = '选择省(直辖市)';
+			dialog.isVisible = true;
+			return
+		}
 		if (state.data) {
 			handleMapData(state.data);
 		}
+	}
+
+	// 选择省份
+	const handleProvinceChange = (data) => {
+		getRoadName({ province: selectedProvince.value }).then(res => {
+			if (~~res?.code == 200) {
+				const data = res?.data || [];
+				console.log(data)
+				for (let i = 0; i < data.length; i++) {
+					// this.roadNameList.push({
+					// 	label: data[i],
+					// 	value: data[i]
+					// })
+				}
+			}
+		}).catch((e) => {
+
+		});
 	}
 
 	const checkType = (data, type) => {
@@ -270,7 +324,7 @@
 			}
 		}
 		return true; // 如果所有 type 属性都是 MultiLineString，返回 true
-		}
+	}
 	
 	/**
 	 * 地图layer绘制，接收输入数据
@@ -366,8 +420,8 @@
 			align-items: center;
 
 			.map-tools-item {
-				width: 40px;
-				height: 40px;
+				width: 30px;
+				height: 30px;
 				margin: 5px 0;
 				font-size: 12px;
 				font-weight: bold;
@@ -378,6 +432,11 @@
 				justify-content: center;
 				align-items: center;
 				cursor: pointer;
+
+				& img {
+					width: 15px;
+					height: 15px;
+				}
 
 				&:hover {
 					color: #fff;

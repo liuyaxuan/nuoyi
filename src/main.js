@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import { setStore } from '../src/utils/http.js'
 
 // 引入全局样式
 import './style/index.less'
@@ -29,6 +30,7 @@ app.config.globalProperties.$message = ElMessage
 app.use(router);
 // 挂载vuex store
 app.use(store);
+setStore(store);
 // element-plus全局注册
 app.use(ElementPlus);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

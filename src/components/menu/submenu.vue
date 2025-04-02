@@ -1,7 +1,7 @@
 <template>
     <div class="menu-item">
         <p
-            :class="'menu-text ' + (curRoute == $route.name ? 'active' : '')"
+            :class="'menu-text ' + menuData.path"
             v-if="!menuData.hidden"
             :style="submenuLevel > 1 ? 'padding-left: 20px' : ''"
             @click="toggle(menuData.path)"
@@ -35,7 +35,7 @@ import {
     defineProps,
     defineComponent,
 } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import nyMenu from './menu.vue'
 // icons
 import menuIcon from '@/assets/icons/white/menu.png'
@@ -67,17 +67,38 @@ const $route = useRoute(); // 获取当前路由信息
 const menuItemParent = ref(true)
 const clickToMenu = ref(false)
 const menuLevel = ref(0)
-const curRoute = ref('')
+
+function getSelectedHistory() {
+    let routeName = $route.matched.map((item) => item.name);
+    routeName = routeName[routeName.length - 1];
+	const $router = useRouter(); // 获取路由实例
+    $router.push({ name: routeName });
+    toggle(routeName);
+}
 
 function toggle(e) {
     clickToMenu.value = !clickToMenu.value
     menuItemParent.value = false
-    // 当前路由
-    curRoute.value = e
+    selectMenu(e);
+}
+
+function selectMenu(className) {
+    // 清理
+    const doms = document.getElementsByClassName('menu-text');
+    for (let i = 0; i < doms.length; i++) {
+        doms[i].classList.remove('active');
+    };
+    // 选中
+    setTimeout(() => {
+        document.getElementsByClassName(className)[0].classList.add('active');
+    }, 0)
 }
 
 onMounted(() => {
     menuLevel.value = props.submenuLevel + 1;
+
+    // 选中历史记录
+    getSelectedHistory();
 })
 </script>
 <style lang="less">

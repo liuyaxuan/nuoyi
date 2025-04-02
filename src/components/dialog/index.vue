@@ -94,13 +94,13 @@ onUpdated(() => {
 
 <style scoped lang="less">
 .cover {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 998;
+    z-index: 9998;
 }
 
 .dialog-fly-in {
@@ -109,7 +109,7 @@ onUpdated(() => {
     position: absolute;
     top: 0%;
     right: 0%;
-    z-index: 999;
+    z-index: 9999;
     border-radius: 6px;
     box-shadow: 0px 2px 2px #464646;
     border: 1px solid #ebebeb;
@@ -157,7 +157,7 @@ onUpdated(() => {
     }
 
     100% {
-        top: 30%;
+        // top: 10%;
         right: 50%;
         transform: translate(50%, 50%);
     }

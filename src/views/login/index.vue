@@ -6,6 +6,8 @@
 -->
 
 <template>
+    <!-- loading -->
+    <my-loading></my-loading>
     <div class="login-container">
         <!-- 表单 -->
         <form class="form">
@@ -15,7 +17,16 @@
             <span class="input-span">
                 <label for="password" class="label">{{ placeholderPSD }}</label>
                 <input v-model="password" type="password" name="password" id="password" autocomplete="off" /></span>
-            <span class="span"><a href="#">忘记密码?</a></span>
+            <span class="forget span">
+                <input
+                    class="check"
+                    :checked="remember" 
+                    type="checkbox"
+                    @click="handleCheck"
+                >
+                <a class="remember" href="#">记住密码</a>
+                <a href="#">忘记密码?</a>
+            </span>
             <div class="submit" @click="handleSubmit">登录</div>
             <span class="span">还没有账号? <a href="">注册</a></span>
         </form>
@@ -40,12 +51,22 @@ import {
     getCurrentInstance, // 获取当前组件的实例
     defineOptions,
     defineProps,
+    defineComponent
 } from 'vue';
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router';
+// 导入loading组件(全局)
+import myLoading from '@/components/loader/loading.vue';
+// api请求
+import { login } from "@/api/login/login.js";
 
 defineOptions({
     name: 'login'
+})
+defineComponent({
+    components: {
+        myLoading
+    }
 })
 
 defineProps({})
@@ -59,8 +80,9 @@ const store = useStore();
 
 const username = ref('');
 const password = ref('');
-const placeholderUSN = ref('账号')
-const placeholderPSD = ref('密码')
+const placeholderUSN = ref('账号');
+const placeholderPSD = ref('密码');
+const remember = ref(false);
 
 const handleFocusUSN = () => {
     placeholderUSN.value = '请输入账号'
@@ -76,11 +98,30 @@ const handleBlurPSD = () => {
     placeholderPSD.value = '密码:'
 }
 
+const handleCheck = () => {
+    remember.value = !remember.value;
+    if (remember.value) {
+        localStorage.setItem('username', username.value || '');
+        localStorage.setItem('password', password.value || '');
+    } else {
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+    }
+}
+
 const handleSubmit = () => {
     if (username.value === '' || password.value === '') {
         return;
     }
-    $router.replace('/index');
+    login({
+        username: username.value || '',
+        password: password.value || ''
+    }).then(res => {
+        if (res.code === 200) {
+            store.commit('setToken', res.token || '');
+            $router.replace('/index');
+        }
+    })
 }
 
 const handleInForm = () => {
@@ -94,6 +135,14 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
+    // 获取是否记录账号密码
+    const usn = localStorage.getItem('username') || '';
+    const psd = localStorage.getItem('password') || '';
+    username.value = usn;
+    password.value = psd;
+    if (usn && psd) {
+        remember.value = true;
+    }
 });
 
 onBeforeUpdate(() => {
@@ -126,6 +175,7 @@ onUpdated(() => {
     padding: 20px 20px;
     box-sizing: border-box;
 }
+
 .form:hover {
     border-radius: 12px;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
@@ -193,6 +243,74 @@ onUpdated(() => {
 
 .span a {
     color: var(--clr);
+}
+
+.forget {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+
+    // 记住账号密码复选框
+    .check {
+        position: relative;
+        width: 15px;
+        height: 15px;
+        border-radius: 2px;
+        appearance: none;
+        background-color: #bbb;
+        transition: all .3s;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .check::before {
+        content: '';
+        position: absolute;
+        border: solid #fff;
+        display: block;
+        width: .3em;
+        height: .6em;
+        border-width: 0 .2em .2em 0;
+        z-index: 1;
+        opacity: 0;
+        right: calc(50% - .3em);
+        top: calc(50% - .6em);
+        transform: rotate(0deg);
+        transition: all .3s;
+        transform-origin: center center;
+    }
+
+    .check:checked {
+        animation: a .3s ease-in forwards;
+        background-color: rgb(120, 190, 120);
+    }
+
+    .check:checked::before {
+        opacity: 1;
+        transform: rotate(405deg);
+    }
+
+    @keyframes a {
+        0% {
+            opacity: 1;
+            transform: scale(1) rotateY(0deg);
+        }
+
+        50% {
+            opacity: 0;
+            transform: scale(.8) rotateY(180deg);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1) rotateY(360deg);
+        }
+    }
+}
+
+.remember {
+    margin-right: 20px;
 }
 
 // 流星
