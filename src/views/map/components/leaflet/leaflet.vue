@@ -72,7 +72,16 @@
 					@click="handleDraw('drawnPolygon')"
 				>
 					<img :src="drawnPolygonIcon" />
-					<div class="map-tools-item-name" v-if="tipsType === 'drawnPolygon'">绘制区域</div>
+					<div class="map-tools-item-name" v-if="tipsType === 'drawnPolygon'">绘制多边形</div>
+				</div>
+				<div
+					:class="state.type === 'drawCircle' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
+					@mouseover="tipsType = 'drawCircle'"
+					@mouseleave="tipsType = ''"
+					@click="handleDraw('drawCircle')"
+				>
+					<img :src="drawCircleIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'drawCircle'">绘制圆形</div>
 				</div>
 				<div
 					:class="state.type === 'search' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
@@ -146,6 +155,7 @@
 	import { usePolyline } from './fns/lines.js'
 	import { usePolygon } from './fns/polygon.js'
 	import { useDrawPolygon } from './fns/drawnPolygon.js'
+	import { useDrawCircle } from './fns/drawCircle.js'
 	// 行政区域名称配置
 	import { provinces } from '@/utils/config.js'
 	// icon
@@ -153,6 +163,7 @@
 	import lineIcon from '@/assets/icons/blue/line.svg'
 	import polygonIcon from '@/assets/icons/blue/polygon.svg'
 	import drawnPolygonIcon from '@/assets/icons/blue/editPolygon.svg'
+	import drawCircleIcon from '@/assets/icons/blue/bubble-chart.svg'
 	import searchIcon from '@/assets/icons/blue/search.svg'
 	import downloadIcon from '@/assets/icons/blue/download.svg'
 
@@ -227,7 +238,16 @@
 		store.commit('system/SET_LOADING', true);
 		setTimeout(() => {
 			visibleConfig.value = false;
-			domtoimage.toPng(leafletMap.value) // 将DOM节点转换为PNG图片
+			const options = {
+				style: {
+					margin: '0'
+				},
+				filter: null,
+				quality: 1,
+				cacheBust: true,
+				useCORS: true
+			};
+			domtoimage.toPng(leafletMap.value, options) // 将DOM节点转换为PNG图片
 			.then(function (dataUrl) {
 				let link = document.createElement('a'); // 创建一个a元素来下载图片
 				link.download = 'screenshot.png'; // 设置下载文件名
@@ -331,6 +351,10 @@
 		}
 		if (type == 'drawnPolygon') {
 			useDrawPolygon(state.map);
+			return
+		}
+		if (type == 'drawCircle') {
+			useDrawCircle(state.map);
 			return
 		}
 		if (state.data) {
@@ -570,5 +594,17 @@
 	}
 	::v-deep .download-button {
 		background: #3f9eff;
+	}
+	::v-deep .radius-label-text {
+		display: block;
+		color: rgba(0, 0, 0, 0.8);
+		background-color: rgba(255, 255, 255, 0.5);
+		padding: 5px;
+		border-radius: 5px;
+		font-size: 10px;
+		font-weight: bold;
+		width: auto !important;
+		min-width: 100px !important;
+		height: auto !important;
 	}
 </style>
