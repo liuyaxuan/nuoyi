@@ -1,6 +1,7 @@
 import axios from "axios";
 import errorCode from "./errorCode";
 import { getToken } from './auth'
+import { useRoute, useRouter } from 'vue-router';
 
 // 是否显示重新登录
 export let isRelogin = { show: false };
@@ -20,8 +21,12 @@ switch (NODE_ENV) {
 console.log('NODE_ENV=>', NODE_ENV);
 
 let storeInstance = null; // 注入store实例
+let routerInstance = null; // 注入router实例
 export function setStore(store) {
     storeInstance = store;
+}
+export function setRouter(router) {
+    routerInstance = router;
 }
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
@@ -101,17 +106,7 @@ service.interceptors.response.use(res => {
         return res.data
     }
     if (code === 401) {
-        // if (!isRelogin.show) {
-        //   isRelogin.show = true;
-        //   MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
-        //     isRelogin.show = false;
-        //     store.dispatch('LogOut').then(() => {
-        //       location.href = '/index';
-        //     })
-        //   }).catch(() => {
-        //     isRelogin.show = false;
-        //   });
-        // }
+        // routerInstance.replace({ path: '/login' });
         return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
     } else if (code === 500) {
         return Promise.reject(msg);

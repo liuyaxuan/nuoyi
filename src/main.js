@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setStore } from '../src/utils/http.js'
+import { setStore, setRouter } from '../src/utils/http.js'
 
 // 引入全局样式
 import './style/index.less'
@@ -28,6 +28,7 @@ app.config.globalProperties.$http = {
 app.config.globalProperties.$message = ElMessage
 // 路由
 app.use(router);
+setRouter(router);
 // 挂载vuex store
 app.use(store);
 setStore(store);

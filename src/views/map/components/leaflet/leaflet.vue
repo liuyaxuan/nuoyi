@@ -38,23 +38,59 @@
 
 			<!-- 工具栏 -->
 			<div class="map-tools">
-				<div :class="state.type === 'marker' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('marker')">
+				<div
+					:class="state.type === 'marker' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
+					@mouseover="tipsType = 'marker'"
+					@mouseleave="tipsType = ''"
+					@click="handleDraw('marker')"
+				>
 					<img :src="markerIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'marker'">坐标点</div>
 				</div>
-				<div :class="state.type === 'line' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('line')">
+				<div
+					:class="state.type === 'line' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
+					@mouseover="tipsType = 'line'"
+					@mouseleave="tipsType = ''"
+					@click="handleDraw('line')"
+				>
 					<img :src="lineIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'line'">线</div>
 				</div>
-				<div :class="state.type === 'polygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('polygon')">
+				<div
+					:class="state.type === 'polygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
+					@mouseover="tipsType = 'polygon'"
+					@mouseleave="tipsType = ''"
+					@click="handleDraw('polygon')"
+				>
 					<img :src="polygonIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'polygon'">区域</div>
 				</div>
-				<div :class="state.type === 'editpPolygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('editpPolygon')">
-					<img :src="editpPolygonIcon" />
+				<div
+					:class="state.type === 'drawnPolygon' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
+					@mouseover="tipsType = 'drawnPolygon'"
+					@mouseleave="tipsType = ''"
+					@click="handleDraw('drawnPolygon')"
+				>
+					<img :src="drawnPolygonIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'drawnPolygon'">绘制区域</div>
 				</div>
-				<div :class="state.type === 'search' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="handleDraw('search')">
+				<div
+					:class="state.type === 'search' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
+					@mouseover="tipsType = 'search'"
+					@mouseleave="tipsType = ''"
+					@click="handleDraw('search')"
+				>
 					<img :src="searchIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'search'">搜索</div>
 				</div>
-				<div :class="state.type === 'download' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'" @click="downloadImg('download')">
+				<div
+					:class="state.type === 'download' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
+					@mouseover="tipsType = 'download'"
+					@mouseleave="tipsType = ''"
+					@click="downloadImg('download')"
+				>
 					<img :src="downloadIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'download'">地图快照</div>
 				</div>
 			</div>
 		</template>
@@ -75,6 +111,8 @@
 		defineProps,
 		defineComponent,
 	} from 'vue';
+	// 引入 vuex
+	import { useStore } from 'vuex'
 	// api请求
 	import {
 		getRoadName,
@@ -107,13 +145,14 @@
 	import { useMarker } from './fns/marker.js'
 	import { usePolyline } from './fns/lines.js'
 	import { usePolygon } from './fns/polygon.js'
+	import { useDrawPolygon } from './fns/drawnPolygon.js'
 	// 行政区域名称配置
 	import { provinces } from '@/utils/config.js'
 	// icon
 	import markerIcon from '@/assets/icons/blue/marker.svg'
 	import lineIcon from '@/assets/icons/blue/line.svg'
 	import polygonIcon from '@/assets/icons/blue/polygon.svg'
-	import editpPolygonIcon from '@/assets/icons/blue/editPolygon.svg'
+	import drawnPolygonIcon from '@/assets/icons/blue/editPolygon.svg'
 	import searchIcon from '@/assets/icons/blue/search.svg'
 	import downloadIcon from '@/assets/icons/blue/download.svg'
 
@@ -134,6 +173,7 @@
 	})
 	
 	// 声明状态
+	const store = useStore();
 	const app = getCurrentInstance(); // 获取当前组件的实例
 	const map_cover = ref([]); // 地图深色遮罩
 	const mapLayer = ref([]); // 绘制到地图的各layer层
@@ -151,6 +191,7 @@
 	const visibleConfig = ref(true); // 是否下载图片中
 	const leafletMap = ref(null); // refs获取leafletMap的引用
 	const selectedProvince = ref(''); // 选中的省份
+	const tipsType = ref(''); // 鼠标悬停提示
 
 	watch(() => state.type, (newVal, oldVal) => {
 	    if (newVal === 'download') {
@@ -182,20 +223,24 @@
 		handleMapZoomend();
 	}
 
-	const downloadImg = (type) => {
-		// state.type = type;
-		visibleConfig.value = false;
-		domtoimage.toPng(leafletMap.value) // 将DOM节点转换为PNG图片
-        .then(function (dataUrl) {
-			let link = document.createElement('a'); // 创建一个a元素来下载图片
-			link.download = 'screenshot.png'; // 设置下载文件名
-			link.href = dataUrl; // 设置下载链接为图片的dataURL
-			link.click(); // 模拟点击下载图片
-			visibleConfig.value = true;
-        })
-        .catch(function (error) {
-        	console.error('Oops, something went wrong!', error);
-        });
+	const downloadImg = () => {
+		store.commit('system/SET_LOADING', true);
+		setTimeout(() => {
+			visibleConfig.value = false;
+			domtoimage.toPng(leafletMap.value) // 将DOM节点转换为PNG图片
+			.then(function (dataUrl) {
+				let link = document.createElement('a'); // 创建一个a元素来下载图片
+				link.download = 'screenshot.png'; // 设置下载文件名
+				link.href = dataUrl; // 设置下载链接为图片的dataURL
+				link.click(); // 模拟点击下载图片
+				visibleConfig.value = true;
+				store.commit('system/SET_LOADING', false);
+			})
+			.catch(function (error) {
+				store.commit('system/SET_LOADING', false);
+				console.error('wrong!', error);
+			});
+		}, 3000)
 	}
 
 	const setMapType = (type) => {
@@ -282,6 +327,10 @@
 		if (type === 'search') {
 			dialog.title = '选择省(直辖市)';
 			dialog.isVisible = true;
+			return
+		}
+		if (type == 'drawnPolygon') {
+			useDrawPolygon(state.map);
 			return
 		}
 		if (state.data) {
@@ -432,6 +481,7 @@
 				justify-content: center;
 				align-items: center;
 				cursor: pointer;
+				position: relative;
 
 				& img {
 					width: 15px;
@@ -439,8 +489,11 @@
 				}
 
 				&:hover {
-					color: #fff;
 					background-color: #cde3fa;
+				}
+
+				&:hover > img {
+					color: #fff;
 					animation: pulse 0.5s infinite;
 				}
 
@@ -453,6 +506,34 @@
 					}
 					100% {
 						transform: scale(1);
+					}
+				}
+
+				// 按钮名称
+				.map-tools-item-name {
+					width: 50px;
+					position: absolute;
+					bottom: 15%;
+					left: 130%;
+					transform: translateX(-50%, -15%);
+					font-size: 10px;
+					font-weight: bold;
+					color: #3f9eff;
+					border: 1px solid #3f9eff;
+					background-color: #fff;
+					border-radius: 5px;
+					padding: 2px 5px;
+
+					&::before {
+						content: '';
+						position: absolute;
+						top: 4px;
+						left: -7px;
+						width: 0;
+						height: 0;
+						border-top: 5px solid transparent;
+						border-right: 7px solid #3f9eff;
+						border-bottom: 5px solid transparent;
 					}
 				}
 			}

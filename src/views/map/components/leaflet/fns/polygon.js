@@ -96,5 +96,5 @@ function drawPolygonPlace(map, latlngs) {
 
     // 自动缩放到可视区域数据格式为 [ [lat, lng], [lat, lng], [... ]
     const bounds = new L.LatLngBounds(latlngs);
-    map.fitBounds(bounds);
+    // map.fitBounds(bounds);
 }

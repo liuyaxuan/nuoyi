@@ -118,7 +118,7 @@ const handleSubmit = () => {
         password: password.value || ''
     }).then(res => {
         if (res.code === 200) {
-            store.commit('setToken', res.token || '');
+            // store.commit('setToken', res.token || '');
             $router.replace('/index');
         }
     })

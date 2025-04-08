@@ -43,7 +43,7 @@ export function usePolyline(map, data, bigImage) {
                         }
                     }
                     const polyline = L.polyline(latlngs, { color: 'rgba(255, 0, 255, 0.8)', weight: 1, fill: false }).addTo(map);
-                    map.fitBounds(polyline.getBounds());
+                    // map.fitBounds(polyline.getBounds());
                 }
                 return
             } else {
@@ -82,5 +82,5 @@ export function usePolyline(map, data, bigImage) {
     }
 
     var polyline = L.polyline(latlngs, { color: 'red', weight: 1, fill: false }).addTo(map);
-    map.fitBounds(polyline.getBounds());
+    // map.fitBounds(polyline.getBounds());
 }
