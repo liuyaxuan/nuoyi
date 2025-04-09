@@ -56,9 +56,9 @@ export function useDrawPolygon(map) {
 }
 
 export function offDraw(map) {
-    polygon.setLatLngs(points);
+    // polygon.setLatLngs(points);
     //触发双击事件，结束绘制
-    map.fire("dblclick");
+    map.off("dblclick");
     map.off("click");
     map.off("dblclick");
 }

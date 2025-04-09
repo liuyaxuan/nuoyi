@@ -90,7 +90,7 @@
 					@click="handleDraw('search')"
 				>
 					<img :src="searchIcon" />
-					<div class="map-tools-item-name" v-if="tipsType === 'search'">搜索</div>
+					<div class="map-tools-item-name" v-if="tipsType === 'search'">搜索道路</div>
 				</div>
 				<div
 					:class="state.type === 'download' ? 'map-tools-item map-tools-item-active' : 'map-tools-item'"
@@ -100,6 +100,27 @@
 				>
 					<img :src="downloadIcon" />
 					<div class="map-tools-item-name" v-if="tipsType === 'download'">地图快照</div>
+				</div>
+				<div
+					class="map-tools-item"
+					@mouseover="tipsType = 'reloadMap'"
+					@mouseleave="tipsType = ''"
+					@click="handleDraw('reloadMap')"
+				>
+					<img :src="clearIcon" />
+					<div class="map-tools-item-name" v-if="tipsType === 'reloadMap'">重置地图</div>
+				</div>
+				<!-- 工具栏遮罩层，关闭置换多边形和圆形 -->
+				<div class="map-tools-mask" v-if="state.type == 'drawnPolygon' || state.type == 'drawCircle'">
+					<div
+						class="map-tools-item"
+						@mouseover="tipsType = 'backTools'"
+						@mouseleave="tipsType = ''"
+						@click="handleDraw('backTools')"
+					>
+						<img :src="backIcon" />
+						<div class="map-tools-item-name" v-if="tipsType === 'backTools'">退出编辑</div>
+					</div>
 				</div>
 			</div>
 		</template>
@@ -154,8 +175,8 @@
 	import { useMarker } from './fns/marker.js'
 	import { usePolyline } from './fns/lines.js'
 	import { usePolygon } from './fns/polygon.js'
-	import { useDrawPolygon } from './fns/drawnPolygon.js'
-	import { useDrawCircle } from './fns/drawCircle.js'
+	import { useDrawPolygon, offDraw } from './fns/drawnPolygon.js'
+	import { useDrawCircle, offEvent } from './fns/drawCircle.js'
 	// 行政区域名称配置
 	import { provinces } from '@/utils/config.js'
 	// icon
@@ -166,6 +187,8 @@
 	import drawCircleIcon from '@/assets/icons/blue/bubble-chart.svg'
 	import searchIcon from '@/assets/icons/blue/search.svg'
 	import downloadIcon from '@/assets/icons/blue/download.svg'
+	import clearIcon from '@/assets/icons/blue/clear.svg'
+	import backIcon from '@/assets/icons/blue/back.svg'
 
 	defineOptions({
 		name: 'mapLeaflet'
@@ -344,19 +367,34 @@
 	 */
 	const handleDraw = (type) => {
 	    state.type = type;
+		// 返回工具栏
+		if (type == 'backTools') {
+			offDraw(state.map);
+			offEvent(state.map);
+			return
+		}
+		// 搜索
 		if (type === 'search') {
 			dialog.title = '选择省(直辖市)';
 			dialog.isVisible = true;
 			return
 		}
+		// 绘制多边形区域
 		if (type == 'drawnPolygon') {
 			useDrawPolygon(state.map);
 			return
 		}
+		// 绘制圆形区域
 		if (type == 'drawCircle') {
 			useDrawCircle(state.map);
 			return
 		}
+		// 重置
+		if (type == 'reloadMap') {
+
+			return
+		}
+
 		if (state.data) {
 			handleMapData(state.data);
 		}
@@ -367,7 +405,6 @@
 		getRoadName({ province: selectedProvince.value }).then(res => {
 			if (~~res?.code == 200) {
 				const data = res?.data || [];
-				console.log(data)
 				for (let i = 0; i < data.length; i++) {
 					// this.roadNameList.push({
 					// 	label: data[i],
@@ -566,6 +603,22 @@
 				color: #fff;
 				transform: scale(1.2);
 				background-color: #cde3fa;
+			}
+
+			.map-tools-mask {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.8);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				.map-tools-item {
+					height: 60px;
+				}
 			}
 		}
 	}
